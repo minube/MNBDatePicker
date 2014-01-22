@@ -9,6 +9,8 @@
 #import "MNBViewController.h"
 #import "MNBDatePickerViewCell.h"
 
+static const NSUInteger MNBDatePickerDaysPerWeek = 7;
+
 @interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSCalendar *calendar;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -57,19 +59,28 @@
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 1;
+    //Each Section is a Month
+    return [self.calendar components:NSMonthCalendarUnit fromDate:self.firstDate toDate:self.lastDate options:0].month + 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 2000;
+    NSDate *firstDayOfMonth = [self firstDayOfMonthForSection:section];
+    NSRange rangeOfWeeks = [self.calendar rangeOfUnit:NSWeekCalendarUnit inUnit:NSMonthCalendarUnit forDate:firstDayOfMonth];
+    
+    //We need the number of calendar weeks for the full months (it will maybe include previous month and next months cells)
+    return (rangeOfWeeks.length * MNBDatePickerDaysPerWeek);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MNBDatePickerViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([MNBDatePickerViewCell class]) forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor greenColor];
-    cell.dayNumber = [NSString stringWithFormat:@"%d", indexPath.item];
+    
+    NSDate *cellDate = [self dateForCellAtIndexPath:indexPath];
+    
+    NSDateComponents *cellDateComponents = [self.calendar components:NSDayCalendarUnit|NSMonthCalendarUnit fromDate:cellDate];
+    NSString *cellTitleString = [NSString stringWithFormat:@"%@", @(cellDateComponents.day)];
+    cell.dayNumber = cellTitleString;
     
     return cell;
 }
@@ -77,7 +88,28 @@
 #pragma mark - UICollectionViewFlowLayoutDelegate
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(50, 50);
+    CGFloat itemWidth = floorf(CGRectGetWidth(self.collectionView.bounds) / MNBDatePickerDaysPerWeek);
+    
+    return CGSizeMake(itemWidth, itemWidth);
+}
+
+#pragma mark - Collection View / Calendar Methods
+- (NSDate *)firstDayOfMonthForSection:(NSInteger)section
+{
+    NSDateComponents *offset = [NSDateComponents new];
+    offset.month = section;
+    
+    return [self.calendar dateByAddingComponents:offset toDate:self.firstDate options:0];
+}
+
+- (NSDate *)dateForCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDate *firstOfMonth = [self firstDayOfMonthForSection:indexPath.section];
+    NSInteger ordinalityOfFirstDay = [self.calendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSWeekCalendarUnit forDate:firstOfMonth];
+    NSDateComponents *dateComponents = [NSDateComponents new];
+    dateComponents.day = (1 - ordinalityOfFirstDay) + indexPath.item;
+    
+    return [self.calendar dateByAddingComponents:dateComponents toDate:firstOfMonth options:0];
 }
 
 #pragma mark - Rotation Handling

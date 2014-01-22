@@ -25,7 +25,13 @@
 
 - (void)commonInit
 {
+    [self initCell];
     [self initDayLabel];
+}
+
+- (void)initCell
+{
+    self.backgroundColor = [UIColor greenColor];
 }
 
 - (void)initDayLabel
