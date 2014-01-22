@@ -9,6 +9,7 @@
 #import "MNBViewController.h"
 #import "MNBDatePickerViewCell.h"
 #import "MNBDatePickerViewHeader.h"
+#import "MNBDatePickerCollectionViewFlowLayout.h"
 
 static const NSUInteger MNBDatePickerDaysPerWeek = 7;
 static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
@@ -41,8 +42,8 @@ static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
 
 - (void)initCollectionView
 {
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:flowLayout];
+    MNBDatePickerCollectionViewFlowLayout *customLayout = [[MNBDatePickerCollectionViewFlowLayout alloc] init];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:customLayout];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.collectionView.backgroundColor = [UIColor redColor];
     self.collectionView.delegate = self;
