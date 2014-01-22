@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface MNBViewController : UIViewController
-
+@property (nonatomic, strong) NSDate *firstDate;
+@property (nonatomic, strong) NSDate *lastDate;
 @end

@@ -8,12 +8,21 @@
 
 #import "MNBViewController.h"
 #import "MNBDatePickerViewCell.h"
+#import "MNBDatePickerViewHeader.h"
+
+static const NSUInteger MNBDatePickerDaysPerWeek = 7;
+static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
 
 @interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-@property (strong, nonatomic) UICollectionView *collectionView;
+@property (nonatomic, strong) NSCalendar *calendar;
+@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) NSDateFormatter *headerDateFormatter;
 @end
 
 @implementation MNBViewController
+
+@synthesize firstDate = _firstDate;
+@synthesize lastDate = _lastDate;
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,6 +47,7 @@
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.collectionView registerClass:[MNBDatePickerViewCell class] forCellWithReuseIdentifier:NSStringFromClass([MNBDatePickerViewCell class])];
+    [self.collectionView registerClass:[MNBDatePickerViewHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([MNBDatePickerViewHeader class])];
     [self.view addSubview:self.collectionView];
 }
 
@@ -49,23 +59,44 @@
 }
 
 #pragma mark - UICollectionViewDelegate
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    if (kind == UICollectionElementKindSectionHeader) {
+        MNBDatePickerViewHeader *headerView = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([MNBDatePickerViewHeader class]) forIndexPath:indexPath];
+        
+        headerView.title = [self.headerDateFormatter stringFromDate:[self firstDayOfMonthForSection:indexPath.section]].uppercaseString;
+        
+        return headerView;
+    }
+    
+    return nil;
+}
 
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 1;
+    //Each Section is a Month
+    return [self.calendar components:NSMonthCalendarUnit fromDate:self.firstDate toDate:self.lastDate options:0].month + 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 2000;
+    NSDate *firstDayOfMonth = [self firstDayOfMonthForSection:section];
+    NSRange rangeOfWeeks = [self.calendar rangeOfUnit:NSWeekCalendarUnit inUnit:NSMonthCalendarUnit forDate:firstDayOfMonth];
+    
+    //We need the number of calendar weeks for the full months (it will maybe include previous month and next months cells)
+    return (rangeOfWeeks.length * MNBDatePickerDaysPerWeek);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MNBDatePickerViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([MNBDatePickerViewCell class]) forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor greenColor];
-    cell.dayNumber = [NSString stringWithFormat:@"%d", indexPath.item];
+    
+    NSDate *cellDate = [self dateForCellAtIndexPath:indexPath];
+    
+    NSDateComponents *cellDateComponents = [self.calendar components:NSDayCalendarUnit|NSMonthCalendarUnit fromDate:cellDate];
+    NSString *cellTitleString = [NSString stringWithFormat:@"%@", @(cellDateComponents.day)];
+    cell.dayNumber = cellTitleString;
     
     return cell;
 }
@@ -73,14 +104,95 @@
 #pragma mark - UICollectionViewFlowLayoutDelegate
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(50, 50);
+    CGFloat itemWidth = floorf(CGRectGetWidth(self.collectionView.bounds) / MNBDatePickerDaysPerWeek);
+    
+    return CGSizeMake(itemWidth, itemWidth);
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    return CGSizeMake(CGRectGetWidth(self.collectionView.bounds), MNBDatePickerHeaderHeight);
+}
+
+#pragma mark - Collection View / Calendar Methods
+- (NSDate *)firstDayOfMonthForSection:(NSInteger)section
+{
+    NSDateComponents *offset = [NSDateComponents new];
+    offset.month = section;
+    
+    return [self.calendar dateByAddingComponents:offset toDate:self.firstDate options:0];
+}
+
+- (NSDate *)dateForCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDate *firstOfMonth = [self firstDayOfMonthForSection:indexPath.section];
+    NSInteger ordinalityOfFirstDay = [self.calendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSWeekCalendarUnit forDate:firstOfMonth];
+    NSDateComponents *dateComponents = [NSDateComponents new];
+    dateComponents.day = (1 - ordinalityOfFirstDay) + indexPath.item;
+    
+    return [self.calendar dateByAddingComponents:dateComponents toDate:firstOfMonth options:0];
 }
 
 #pragma mark - Rotation Handling
-
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+#pragma mark - Setters
+- (void)setFirstDate:(NSDate *)firstDate
+{
+    NSDateComponents *components = [self.calendar components:NSMonthCalendarUnit | NSYearCalendarUnit fromDate:firstDate];
+    _firstDate = [self.calendar dateFromComponents:components];
+}
+
+- (void)setLastDate:(NSDate *)lastDate
+{
+    NSDateComponents *components = [self.calendar components:NSMonthCalendarUnit | NSYearCalendarUnit fromDate:lastDate];
+    NSDate *firstDayOfMonth = [self.calendar dateFromComponents:components];
+    
+    NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
+    offsetComponents.month = 1;
+    offsetComponents.day = -1;
+    _lastDate = [self.calendar dateByAddingComponents:offsetComponents toDate:firstDayOfMonth options:0];
+}
+
+#pragma mark - Getters
+- (NSDateFormatter *)headerDateFormatter;
+{
+    if (!_headerDateFormatter) {
+        _headerDateFormatter = [[NSDateFormatter alloc] init];
+        _headerDateFormatter.calendar = self.calendar;
+        _headerDateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"yyyyLLLL" options:0 locale:[NSLocale currentLocale]];
+    }
+    return _headerDateFormatter;
+}
+
+- (NSCalendar *)calendar
+{
+    if (!_calendar) {
+        _calendar = [NSCalendar currentCalendar];
+    }
+    return _calendar;
+}
+
+- (NSDate *)firstDate
+{
+    if (!_firstDate) {
+        [self setFirstDate:[NSDate date]];
+    }
+    
+    return _firstDate;
+}
+
+- (NSDate *)lastDate
+{
+    if (!_lastDate) {
+        NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
+        offsetComponents.year = 1;
+        [self setLastDate:[self.calendar dateByAddingComponents:offsetComponents toDate:self.firstDate options:0]];
+    }
+    return _lastDate;
 }
 
 #pragma mark - Memory Management

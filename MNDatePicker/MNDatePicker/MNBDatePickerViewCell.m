@@ -25,13 +25,19 @@
 
 - (void)commonInit
 {
+    [self initCell];
     [self initDayLabel];
+}
+
+- (void)initCell
+{
+    self.backgroundColor = [UIColor greenColor];
 }
 
 - (void)initDayLabel
 {
     _dayLabel = [[UILabel alloc] init];
-    [self.dayLabel setTextAlignment:NSTextAlignmentCenter];
+    self.dayLabel.textAlignment = NSTextAlignmentCenter;
     self.dayLabel.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:self.dayLabel];
     
