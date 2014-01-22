@@ -21,6 +21,7 @@
 		45CECD9C188FAD6800939430 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45CECD9A188FAD6800939430 /* InfoPlist.strings */; };
 		45CECD9E188FAD6800939430 /* MNDatePickerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CECD9D188FAD6800939430 /* MNDatePickerTests.m */; };
 		45CECDA9188FC12A00939430 /* MNBDatePickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CECDA8188FC12A00939430 /* MNBDatePickerViewCell.m */; };
+		45CECDAC188FD20400939430 /* MNBDatePickerViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CECDAB188FD20400939430 /* MNBDatePickerViewHeader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		45CECD9D188FAD6800939430 /* MNDatePickerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MNDatePickerTests.m; sourceTree = "<group>"; };
 		45CECDA7188FC12A00939430 /* MNBDatePickerViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerViewCell.h; sourceTree = "<group>"; };
 		45CECDA8188FC12A00939430 /* MNBDatePickerViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerViewCell.m; sourceTree = "<group>"; };
+		45CECDAA188FD20400939430 /* MNBDatePickerViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerViewHeader.h; sourceTree = "<group>"; };
+		45CECDAB188FD20400939430 /* MNBDatePickerViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerViewHeader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 				45CECD88188FAD6800939430 /* MNBViewController.m */,
 				45CECDA7188FC12A00939430 /* MNBDatePickerViewCell.h */,
 				45CECDA8188FC12A00939430 /* MNBDatePickerViewCell.m */,
+				45CECDAA188FD20400939430 /* MNBDatePickerViewHeader.h */,
+				45CECDAB188FD20400939430 /* MNBDatePickerViewHeader.m */,
 				45CECD8A188FAD6800939430 /* Images.xcassets */,
 				45CECD79188FAD6800939430 /* Supporting Files */,
 			);
@@ -252,6 +257,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45CECD89188FAD6800939430 /* MNBViewController.m in Sources */,
+				45CECDAC188FD20400939430 /* MNBDatePickerViewHeader.m in Sources */,
 				45CECD83188FAD6800939430 /* MNBAppDelegate.m in Sources */,
 				45CECDA9188FC12A00939430 /* MNBDatePickerViewCell.m in Sources */,
 				45CECD7F188FAD6800939430 /* main.m in Sources */,

@@ -8,12 +8,15 @@
 
 #import "MNBViewController.h"
 #import "MNBDatePickerViewCell.h"
+#import "MNBDatePickerViewHeader.h"
 
 static const NSUInteger MNBDatePickerDaysPerWeek = 7;
+static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
 
 @interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSCalendar *calendar;
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) NSDateFormatter *headerDateFormatter;
 @end
 
 @implementation MNBViewController
@@ -44,6 +47,7 @@ static const NSUInteger MNBDatePickerDaysPerWeek = 7;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.collectionView registerClass:[MNBDatePickerViewCell class] forCellWithReuseIdentifier:NSStringFromClass([MNBDatePickerViewCell class])];
+    [self.collectionView registerClass:[MNBDatePickerViewHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([MNBDatePickerViewHeader class])];
     [self.view addSubview:self.collectionView];
 }
 
@@ -55,6 +59,18 @@ static const NSUInteger MNBDatePickerDaysPerWeek = 7;
 }
 
 #pragma mark - UICollectionViewDelegate
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    if (kind == UICollectionElementKindSectionHeader) {
+        MNBDatePickerViewHeader *headerView = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([MNBDatePickerViewHeader class]) forIndexPath:indexPath];
+        
+        headerView.title = [self.headerDateFormatter stringFromDate:[self firstDayOfMonthForSection:indexPath.section]].uppercaseString;
+        
+        return headerView;
+    }
+    
+    return nil;
+}
 
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -91,6 +107,11 @@ static const NSUInteger MNBDatePickerDaysPerWeek = 7;
     CGFloat itemWidth = floorf(CGRectGetWidth(self.collectionView.bounds) / MNBDatePickerDaysPerWeek);
     
     return CGSizeMake(itemWidth, itemWidth);
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    return CGSizeMake(CGRectGetWidth(self.collectionView.bounds), MNBDatePickerHeaderHeight);
 }
 
 #pragma mark - Collection View / Calendar Methods
@@ -137,6 +158,16 @@ static const NSUInteger MNBDatePickerDaysPerWeek = 7;
 }
 
 #pragma mark - Getters
+- (NSDateFormatter *)headerDateFormatter;
+{
+    if (!_headerDateFormatter) {
+        _headerDateFormatter = [[NSDateFormatter alloc] init];
+        _headerDateFormatter.calendar = self.calendar;
+        _headerDateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"yyyyLLLL" options:0 locale:[NSLocale currentLocale]];
+    }
+    return _headerDateFormatter;
+}
+
 - (NSCalendar *)calendar
 {
     if (!_calendar) {
