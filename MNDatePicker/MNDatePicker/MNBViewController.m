@@ -10,10 +10,14 @@
 #import "MNBDatePickerViewCell.h"
 
 @interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-@property (strong, nonatomic) UICollectionView *collectionView;
+@property (nonatomic, strong) NSCalendar *calendar;
+@property (nonatomic, strong) UICollectionView *collectionView;
 @end
 
 @implementation MNBViewController
+
+@synthesize firstDate = _firstDate;
+@synthesize lastDate = _lastDate;
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -77,10 +81,55 @@
 }
 
 #pragma mark - Rotation Handling
-
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+#pragma mark - Setters
+- (void)setFirstDate:(NSDate *)firstDate
+{
+    NSDateComponents *components = [self.calendar components:NSMonthCalendarUnit | NSYearCalendarUnit fromDate:firstDate];
+    _firstDate = [self.calendar dateFromComponents:components];
+}
+
+- (void)setLastDate:(NSDate *)lastDate
+{
+    NSDateComponents *components = [self.calendar components:NSMonthCalendarUnit | NSYearCalendarUnit fromDate:lastDate];
+    NSDate *firstDayOfMonth = [self.calendar dateFromComponents:components];
+    
+    NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
+    offsetComponents.month = 1;
+    offsetComponents.day = -1;
+    _lastDate = [self.calendar dateByAddingComponents:offsetComponents toDate:firstDayOfMonth options:0];
+}
+
+#pragma mark - Getters
+- (NSCalendar *)calendar
+{
+    if (!_calendar) {
+        _calendar = [NSCalendar currentCalendar];
+    }
+    return _calendar;
+}
+
+- (NSDate *)firstDate
+{
+    if (!_firstDate) {
+        [self setFirstDate:[NSDate date]];
+    }
+    
+    return _firstDate;
+}
+
+- (NSDate *)lastDate
+{
+    if (!_lastDate) {
+        NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
+        offsetComponents.year = 1;
+        [self setLastDate:[self.calendar dateByAddingComponents:offsetComponents toDate:self.firstDate options:0]];
+    }
+    return _lastDate;
 }
 
 #pragma mark - Memory Management
