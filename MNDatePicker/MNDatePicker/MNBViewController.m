@@ -191,7 +191,7 @@ static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
 {
     if (!_lastDate) {
         NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
-        offsetComponents.year = 1;
+        offsetComponents.year = 2;
         [self setLastDate:[self.calendar dateByAddingComponents:offsetComponents toDate:self.firstDate options:0]];
     }
     return _lastDate;

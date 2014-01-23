@@ -40,8 +40,10 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
 
 - (void)setUp
 {
+    // Default values
     self.numberOfColumns = MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns;
     self.itemsSpace = 2.0f;
+    self.sectionsSpace = 14.0f;
 }
 
 - (void)prepareLayout
@@ -96,20 +98,21 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
         contentSizeWidth += [self widthForSection:section];
     }
     
-    return CGSizeMake(contentSizeWidth, self.collectionView.bounds.size.height);
+    CGFloat totalSectionsSpace = (sectionsCount - 1) * self.sectionsSpace;
+    
+    return CGSizeMake(contentSizeWidth + totalSectionsSpace, self.collectionView.bounds.size.height);
 }
 
 #pragma mark - Layout Calculations
 - (CGRect)frameForCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"Section %d - Item %d", indexPath.section, indexPath.item);
     NSInteger row = (indexPath.item / self.numberOfColumns);
     NSInteger column = indexPath.item - (row * self.numberOfColumns);
     
     CGFloat xOffset = 0.0f;
     if (indexPath.section) {
         for (NSInteger section = 0; section < indexPath.section; section++) {
-            xOffset += [self widthForSection:section];
+            xOffset += [self widthForSection:section] + self.sectionsSpace;
         }
     }
     CGFloat originX = floorf((self.itemSize.width + self.itemsSpace) * column) + xOffset;
