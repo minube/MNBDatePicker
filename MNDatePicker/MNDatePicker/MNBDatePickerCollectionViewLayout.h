@@ -15,5 +15,6 @@
 
 @interface MNBDatePickerCollectionViewLayout : UICollectionViewLayout
 @property (nonatomic, assign) NSUInteger numberOfColumns; // number of columms per section
+@property (nonatomic, assign) CGFloat itemsSpace; // Space between items
 @property (nonatomic, assign) id<MNBDatePickerCollectionViewLayoutDelegate> delegate;
 @end

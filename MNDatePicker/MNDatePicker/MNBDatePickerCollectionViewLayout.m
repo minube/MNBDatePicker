@@ -41,6 +41,7 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
 - (void)setUp
 {
     self.numberOfColumns = MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns;
+    self.itemsSpace = 2.0f;
 }
 
 - (void)prepareLayout
@@ -111,8 +112,8 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
             xOffset += [self widthForSection:section];
         }
     }
-    CGFloat originX = floorf(self.itemSize.width * column) + xOffset;
-    CGFloat originY = floor(self.itemSize.height * row);
+    CGFloat originX = floorf((self.itemSize.width + self.itemsSpace) * column) + xOffset;
+    CGFloat originY = floor((self.itemSize.height + self.itemsSpace) * row);
     
     return CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height);
 }
@@ -125,7 +126,7 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
         maximunNumberOfColumnsForSection = itemsInSection;
     }
     
-    return maximunNumberOfColumnsForSection * self.itemSize.width;
+    return (maximunNumberOfColumnsForSection * self.itemSize.width) + ((maximunNumberOfColumnsForSection - 1) * self.itemsSpace);
 }
 
 #pragma mark - Getters
@@ -136,7 +137,8 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
     if ([self.delegate respondsToSelector:@selector(sizeForItemsForCollectionView:layout:)]) {
         itemSize = [self.delegate sizeForItemsForCollectionView:self.collectionView layout:self];
     } else { // Default
-        CGFloat width = floorf(CGRectGetWidth(self.collectionView.bounds) / self.numberOfColumns);
+        CGFloat totalSpace = (self.numberOfColumns - 1) * self.itemsSpace;
+        CGFloat width = floorf((CGRectGetWidth(self.collectionView.bounds) - totalSpace) / self.numberOfColumns);
         itemSize = CGSizeMake(width, width);
     }
     
