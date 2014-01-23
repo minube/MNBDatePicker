@@ -64,6 +64,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:customLayout];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.collectionView.backgroundColor = [UIColor redColor];
+    self.collectionView.pagingEnabled = YES;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.collectionView registerClass:[MNBDatePickerViewCell class] forCellWithReuseIdentifier:NSStringFromClass([MNBDatePickerViewCell class])];
@@ -71,11 +72,40 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     [self.view addSubview:self.collectionView];
 }
 
+- (void)initArrows
+{
+    UIButton *nextButton = [[UIButton alloc] init];
+    [nextButton setTitle:@"NEXT" forState:UIControlStateNormal];
+    [nextButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    nextButton.titleLabel.font = [UIFont systemFontOfSize:20];
+    nextButton.backgroundColor = [UIColor grayColor];
+    nextButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [nextButton addTarget:self action:@selector(nextPage:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:nextButton];
+    
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:nextButton attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:-20.0f]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:nextButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:20.0f]];
+    
+    UIButton *backButton = [[UIButton alloc] init];
+    [backButton setTitle:@"BACK" forState:UIControlStateNormal];
+    [backButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    backButton.titleLabel.font = [UIFont systemFontOfSize:20];
+    backButton.backgroundColor = [UIColor grayColor];
+    backButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [backButton addTarget:self action:@selector(backPage:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backButton];
+    
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:backButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeading multiplier:1.0f constant:20.0f]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:backButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:20.0f]];
+    
+}
+
 #pragma mark - View Life Cycle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self initCollectionView];
+    [self initArrows];
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -167,6 +197,29 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
                     arrayByAddingObjectsFromArray:[weekdays subarrayWithRange:NSMakeRange(0, firstWeekdayIndex)]];
     }
     return weekdays;
+}
+
+#pragma mark - IBActions
+- (void)nextPage:(UIButton *)button
+{
+    if (self.collectionView.contentOffset.x <= self.collectionView.contentSize.width) {
+        CGRect nextFrame = CGRectZero;
+        nextFrame.origin.x = self.collectionView.contentOffset.x + self.collectionView.frame.size.width;
+        nextFrame.origin.y = 0;
+        nextFrame.size = self.collectionView.frame.size;
+        [self.collectionView scrollRectToVisible:nextFrame animated:YES];
+    }
+}
+
+- (void)backPage:(UIButton *)button
+{
+    if (self.collectionView.contentOffset.x >= self.collectionView.frame.size.width) {
+        CGRect backFrame = CGRectZero;
+        backFrame.origin.x = self.collectionView.contentOffset.x - self.collectionView.frame.size.width;
+        backFrame.origin.y = 0;
+        backFrame.size = self.collectionView.frame.size;
+        [self.collectionView scrollRectToVisible:backFrame animated:YES];
+    }
 }
 
 #pragma mark - Rotation Handling
