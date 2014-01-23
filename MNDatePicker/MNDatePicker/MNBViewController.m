@@ -123,7 +123,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     
     NSString *cellTitleString = @"";
     if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
-        cellTitleString = [NSString stringWithFormat:@"%@, %@", @(cellDateComponents.day), @(cellDateComponents.month)];
+        cellTitleString = [NSString stringWithFormat:@"%@", @(cellDateComponents.day)];
     }
     cell.dayNumber = cellTitleString;
     
