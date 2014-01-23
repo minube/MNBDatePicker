@@ -48,6 +48,12 @@ static const CGFloat MNBDatePickerHeaderTextSize = 12.0f;
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f]];
 }
 
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    self.titleLabel.text = @"";
+}
+
 #pragma mark - Setters
 - (void)setTitle:(NSString *)title
 {

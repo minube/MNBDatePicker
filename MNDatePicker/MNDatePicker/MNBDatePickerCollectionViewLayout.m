@@ -9,6 +9,7 @@
 #import "MNBDatePickerCollectionViewLayout.h"
 
 static NSString * const MNBDatePickerCollectionViewLayoutCellKind = @"MNBDatePickerViewCell";
+NSString * const MNBDatePickerCollectionViewLayoutSectionHeaderKind = @"MNBDatePickerViewSectionHeader";
 static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns = 7;
 
 @interface MNBDatePickerCollectionViewLayout ()
@@ -51,13 +52,19 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
 {
     NSMutableDictionary *newLayoutInfo = [NSMutableDictionary dictionary];
     NSMutableDictionary *cellLayoutInfo = [NSMutableDictionary dictionary];
+    NSMutableDictionary *sectionHeaderLayoutInfo = [NSMutableDictionary dictionary];
     
     NSInteger sectionsCount = [self.collectionView numberOfSections];
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
     
     for (NSInteger section = 0; section < sectionsCount; section++) {
-        NSInteger itemsCount = [self.collectionView numberOfItemsInSection:section];
+        // Attributes for headers
+        UICollectionViewLayoutAttributes *sectionHeaderAttributes = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:MNBDatePickerCollectionViewLayoutSectionHeaderKind withIndexPath:indexPath];
+        sectionHeaderAttributes.frame = [self frameForSectionHeaderAtSection:section];
+        sectionHeaderLayoutInfo[indexPath] = sectionHeaderAttributes;
         
+        // Attributes for items
+        NSInteger itemsCount = [self.collectionView numberOfItemsInSection:section];
         for (NSInteger item = 0; item <itemsCount; item++) {
             indexPath = [NSIndexPath indexPathForItem:item inSection:section];
             
@@ -68,6 +75,7 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
     }
     
     newLayoutInfo[MNBDatePickerCollectionViewLayoutCellKind] = cellLayoutInfo;
+    newLayoutInfo[MNBDatePickerCollectionViewLayoutSectionHeaderKind] = sectionHeaderLayoutInfo;
     self.layoutInfo = newLayoutInfo;
 }
 
@@ -91,6 +99,12 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
     return self.layoutInfo[MNBDatePickerCollectionViewLayoutCellKind][indexPath];
 }
 
+- (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind
+                                                                     atIndexPath:(NSIndexPath *)indexPath
+{
+    return self.layoutInfo[MNBDatePickerCollectionViewLayoutSectionHeaderKind][indexPath];
+}
+
 - (CGSize)collectionViewContentSize
 {
     NSInteger contentSizeWidth = 0;
@@ -105,6 +119,18 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
 }
 
 #pragma mark - Layout Calculations
+- (CGRect)frameForSectionHeaderAtSection:(NSInteger)section
+{
+    CGFloat originX = 0.0f;
+    if (section) {
+        for (NSInteger currentSection = 0; currentSection < section; currentSection++) {
+            originX += [self widthForSection:currentSection] + self.sectionsSpace;
+        }
+    }
+    CGFloat originY = 0.0f;
+    return CGRectMake(originX, originY, [self widthForSection:section], self.headerHeight);
+}
+
 - (CGRect)frameForCellAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = (indexPath.item / self.numberOfColumns);
@@ -117,7 +143,7 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
         }
     }
     CGFloat originX = floorf((self.itemSize.width + self.itemsSpace) * column) + xOffset;
-    CGFloat originY = floorf((self.itemSize.height + self.itemsSpace) * row);
+    CGFloat originY = floorf((self.itemSize.height + self.itemsSpace) * row) + self.headerHeight;
     
     return CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height);
 }

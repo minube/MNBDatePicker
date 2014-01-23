@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+UIKIT_EXTERN NSString * const MNBDatePickerCollectionViewLayoutSectionHeaderKind;
+
 @protocol MNBDatePickerCollectionViewLayoutDelegate <NSObject>
 @optional
 - (CGSize)sizeForItemsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)layout;
