@@ -59,6 +59,7 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
     
     for (NSInteger section = 0; section < sectionsCount; section++) {
         // Attributes for headers
+        indexPath = [NSIndexPath indexPathForItem:0 inSection:section];
         UICollectionViewLayoutAttributes *sectionHeaderAttributes = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:MNBDatePickerCollectionViewLayoutSectionHeaderKind withIndexPath:indexPath];
         sectionHeaderAttributes.frame = [self frameForSectionHeaderAtSection:section];
         sectionHeaderLayoutInfo[indexPath] = sectionHeaderAttributes;
