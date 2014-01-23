@@ -12,7 +12,9 @@
 #import "MNBDatePickerCollectionViewLayout.h"
 
 static const NSUInteger MNBDatePickerDaysPerWeek = 7;
+static const NSUInteger MNBDatePickerRowsPerMonth = 6;
 static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
+static const CGFloat MNBDatePickerItemsSpace = 2.0f;
 
 @interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, MNBDatePickerCollectionViewLayoutDelegate>
 @property (nonatomic, strong) NSCalendar *calendar;
@@ -43,7 +45,8 @@ static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
 - (void)initCollectionView
 {
     MNBDatePickerCollectionViewLayout *customLayout = [[MNBDatePickerCollectionViewLayout alloc] init];
-//    customLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    customLayout.delegate = self;
+    customLayout.itemsSpace = MNBDatePickerItemsSpace;
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:customLayout];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.collectionView.backgroundColor = [UIColor redColor];
@@ -107,8 +110,9 @@ static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
 #pragma mark - MNBDatePickerCollectionViewLayoutDelegate
 - (CGSize)sizeForItemsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)layout
 {
-    CGFloat itemWidth = floorf(CGRectGetWidth(self.collectionView.bounds) / MNBDatePickerDaysPerWeek);
-    return CGSizeMake(itemWidth, itemWidth);
+    CGFloat totalItemsSpace = (MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace;
+    CGFloat itemHeight = floorf((CGRectGetHeight(self.collectionView.bounds) - totalItemsSpace) / MNBDatePickerRowsPerMonth);
+    return CGSizeMake(itemHeight, itemHeight);
 }
 
 //- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
