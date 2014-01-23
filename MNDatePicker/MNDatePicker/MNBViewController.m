@@ -15,6 +15,7 @@ static const NSUInteger MNBDatePickerDaysPerWeek = 7;
 static const NSUInteger MNBDatePickerRowsPerMonth = 6;
 static const CGFloat MNBDatePickerHeaderHeight = 100.0f;
 static const CGFloat MNBDatePickerItemsSpace = 2.0f;
+static const NSUInteger MNBDatePickerYearOffset = 2;
 
 @interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, MNBDatePickerCollectionViewLayoutDelegate>
 @property (nonatomic, strong) NSCalendar *calendar;
@@ -191,7 +192,7 @@ static const CGFloat MNBDatePickerItemsSpace = 2.0f;
 {
     if (!_lastDate) {
         NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
-        offsetComponents.year = 2;
+        offsetComponents.year = MNBDatePickerYearOffset;
         [self setLastDate:[self.calendar dateByAddingComponents:offsetComponents toDate:self.firstDate options:0]];
     }
     return _lastDate;
