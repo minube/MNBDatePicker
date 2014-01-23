@@ -12,7 +12,7 @@
 #import "MNBDatePickerCollectionViewLayout.h"
 
 static const NSUInteger MNBDatePickerDaysPerWeek = 7;
-static const NSUInteger MNBDatePickerRowsPerMonth = 6;
+static const NSUInteger MNBDatePickerRowsPerMonth = 6; // This value is 6 to have same number of weeks(rows) per month
 static const CGFloat MNBDatePickerHeaderHeight = 100.0f;
 static const CGFloat MNBDatePickerItemsSpace = 2.0f;
 static const NSUInteger MNBDatePickerYearOffset = 2;
@@ -29,6 +29,16 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 @synthesize firstDate = _firstDate;
 @synthesize lastDate = _lastDate;
 
+- (instancetype)init
+{
+    return [self initWithNibName:nil bundle:nil];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    return [self initWithNibName:nil bundle:nil];
+}
+
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -41,7 +51,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 
 - (void)commonInit
 {
-    
+    _sameNumberOfWeeksPerMonth = YES;
 }
 
 - (void)initCollectionView
@@ -90,11 +100,15 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    NSDate *firstDayOfMonth = [self firstDayOfMonthForSection:section];
-    NSRange rangeOfWeeks = [self.calendar rangeOfUnit:NSWeekCalendarUnit inUnit:NSMonthCalendarUnit forDate:firstDayOfMonth];
+    NSInteger weeksPerMonth = MNBDatePickerRowsPerMonth;
+    if (!self.sameNumberOfWeeksPerMonth) {
+        NSDate *firstDayOfMonth = [self firstDayOfMonthForSection:section];
+        NSRange rangeOfWeeks = [self.calendar rangeOfUnit:NSWeekCalendarUnit inUnit:NSMonthCalendarUnit forDate:firstDayOfMonth];
+        weeksPerMonth = rangeOfWeeks.length;
+    }
     
     //We need the number of calendar weeks for the full months (it will maybe include previous month and next months cells)
-    return (rangeOfWeeks.length * MNBDatePickerDaysPerWeek);
+    return (weeksPerMonth * MNBDatePickerDaysPerWeek);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
