@@ -9,12 +9,12 @@
 #import "MNBViewController.h"
 #import "MNBDatePickerViewCell.h"
 #import "MNBDatePickerViewHeader.h"
-#import "MNBDatePickerCollectionViewFlowLayout.h"
+#import "MNBDatePickerCollectionViewLayout.h"
 
 static const NSUInteger MNBDatePickerDaysPerWeek = 7;
 static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
 
-@interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, MNBDatePickerCollectionViewLayoutDelegate>
 @property (nonatomic, strong) NSCalendar *calendar;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSDateFormatter *headerDateFormatter;
@@ -42,7 +42,8 @@ static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
 
 - (void)initCollectionView
 {
-    MNBDatePickerCollectionViewFlowLayout *customLayout = [[MNBDatePickerCollectionViewFlowLayout alloc] init];
+    MNBDatePickerCollectionViewLayout *customLayout = [[MNBDatePickerCollectionViewLayout alloc] init];
+//    customLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:customLayout];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.collectionView.backgroundColor = [UIColor redColor];
@@ -96,18 +97,17 @@ static const CGFloat MNBDatePickerHeaderHeight = 50.0f;
     
     NSDate *cellDate = [self dateForCellAtIndexPath:indexPath];
     
-    NSDateComponents *cellDateComponents = [self.calendar components:NSDayCalendarUnit|NSMonthCalendarUnit fromDate:cellDate];
-    NSString *cellTitleString = [NSString stringWithFormat:@"%@", @(cellDateComponents.day)];
+    NSDateComponents *cellDateComponents = [self.calendar components:NSDayCalendarUnit | NSMonthCalendarUnit fromDate:cellDate];
+    NSString *cellTitleString = [NSString stringWithFormat:@"%@, %@", @(cellDateComponents.day), @(cellDateComponents.month)];
     cell.dayNumber = cellTitleString;
     
     return cell;
 }
 
-#pragma mark - UICollectionViewFlowLayoutDelegate
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+#pragma mark - MNBDatePickerCollectionViewLayoutDelegate
+- (CGSize)sizeForItemsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)layout
 {
     CGFloat itemWidth = floorf(CGRectGetWidth(self.collectionView.bounds) / MNBDatePickerDaysPerWeek);
-    
     return CGSizeMake(itemWidth, itemWidth);
 }
 
