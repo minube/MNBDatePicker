@@ -10,4 +10,5 @@
 
 @interface MNBDatePickerViewHeader : UICollectionReusableView
 @property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSArray *weekDays;
 @end

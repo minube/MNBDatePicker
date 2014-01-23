@@ -21,6 +21,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 @property (nonatomic, strong) NSCalendar *calendar;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSDateFormatter *headerDateFormatter;
+@property (nonatomic, strong) NSDateFormatter *weekDaysFormatter;
 @end
 
 @implementation MNBViewController
@@ -73,7 +74,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
         MNBDatePickerViewHeader *headerView = [self.collectionView dequeueReusableSupplementaryViewOfKind:MNBDatePickerCollectionViewLayoutSectionHeaderKind withReuseIdentifier:NSStringFromClass([MNBDatePickerViewHeader class]) forIndexPath:indexPath];
         
         headerView.title = [self.headerDateFormatter stringFromDate:[self firstDayOfMonthForSection:indexPath.section]].uppercaseString;
-        
+        headerView.weekDays = [self daysOfTheWeek];
         return headerView;
     }
     
@@ -136,6 +137,18 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     return [self.calendar dateByAddingComponents:dateComponents toDate:firstOfMonth options:0];
 }
 
+- (NSArray *)daysOfTheWeek
+{
+    // adjust array depending on which weekday should be first
+    NSArray *weekdays = [self.weekDaysFormatter shortWeekdaySymbols];
+    NSUInteger firstWeekdayIndex = [self.calendar firstWeekday] - 1;
+    if (firstWeekdayIndex > 0) {
+        weekdays = [[weekdays subarrayWithRange:NSMakeRange(firstWeekdayIndex, 7 - firstWeekdayIndex)]
+                    arrayByAddingObjectsFromArray:[weekdays subarrayWithRange:NSMakeRange(0, firstWeekdayIndex)]];
+    }
+    return weekdays;
+}
+
 #pragma mark - Rotation Handling
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
@@ -161,7 +174,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 }
 
 #pragma mark - Getters
-- (NSDateFormatter *)headerDateFormatter;
+- (NSDateFormatter *)headerDateFormatter
 {
     if (!_headerDateFormatter) {
         _headerDateFormatter = [[NSDateFormatter alloc] init];
@@ -169,6 +182,17 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
         _headerDateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"yyyyLLLL" options:0 locale:[NSLocale currentLocale]];
     }
     return _headerDateFormatter;
+}
+
+- (NSDateFormatter *)weekDaysFormatter
+{
+    if (!_weekDaysFormatter) {
+        _weekDaysFormatter = [[NSDateFormatter alloc] init];
+        _weekDaysFormatter.calendar = self.calendar;
+        _weekDaysFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"LLLL yyyy" options:0 locale:[NSLocale currentLocale]];
+    }
+    
+    return _weekDaysFormatter;
 }
 
 - (NSCalendar *)calendar
