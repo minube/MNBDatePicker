@@ -47,6 +47,7 @@ static const CGFloat MNBDatePickerItemsSpace = 2.0f;
     MNBDatePickerCollectionViewLayout *customLayout = [[MNBDatePickerCollectionViewLayout alloc] init];
     customLayout.delegate = self;
     customLayout.itemsSpace = MNBDatePickerItemsSpace;
+    customLayout.headerHeight = MNBDatePickerHeaderHeight;
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:customLayout];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.collectionView.backgroundColor = [UIColor redColor];

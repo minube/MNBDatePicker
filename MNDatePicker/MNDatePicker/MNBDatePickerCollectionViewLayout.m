@@ -44,6 +44,7 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
     self.numberOfColumns = MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns;
     self.itemsSpace = 2.0f;
     self.sectionsSpace = 14.0f;
+    self.headerHeight = 50.0f;
 }
 
 - (void)prepareLayout
@@ -146,6 +147,39 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
     }
     
     return itemSize;
+}
+
+#pragma mark - Setters
+- (void)setNumberOfColumns:(NSUInteger)numberOfColumns
+{
+    if (_numberOfColumns != numberOfColumns) {
+        _numberOfColumns = numberOfColumns;
+        [self invalidateLayout];
+    }
+}
+
+- (void)setItemsSpace:(CGFloat)itemsSpace
+{
+    if (_itemsSpace != itemsSpace) {
+        _itemsSpace = itemsSpace;
+        [self invalidateLayout];
+    }
+}
+
+- (void)setSectionsSpace:(CGFloat)sectionsSpace
+{
+    if (_sectionsSpace != sectionsSpace) {
+        _sectionsSpace = sectionsSpace;
+        [self invalidateLayout];
+    }
+}
+
+- (void)setHeaderHeight:(CGFloat)headerHeight
+{
+    if (_headerHeight != headerHeight) {
+        _headerHeight = headerHeight;
+        [self invalidateLayout];
+    }
 }
 
 @end

@@ -17,5 +17,6 @@
 @property (nonatomic, assign) NSUInteger numberOfColumns; // number of columms per section
 @property (nonatomic, assign) CGFloat itemsSpace; // Space between items
 @property (nonatomic, assign) CGFloat sectionsSpace; // Space between sections
+@property (nonatomic, assign) CGFloat headerHeight; // Height for the headers displayed above every section
 @property (nonatomic, assign) id<MNBDatePickerCollectionViewLayoutDelegate> delegate;
 @end
