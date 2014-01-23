@@ -52,6 +52,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 - (void)commonInit
 {
     _sameNumberOfWeeksPerMonth = YES;
+    _showDaysOnlyBelongsToMonth = YES;
 }
 
 - (void)initCollectionView
@@ -116,9 +117,14 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     MNBDatePickerViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([MNBDatePickerViewCell class]) forIndexPath:indexPath];
     
     NSDate *cellDate = [self dateForCellAtIndexPath:indexPath];
-    
+    NSDate *firstDayOfMonth = [self firstDayOfMonthForSection:indexPath.section];
     NSDateComponents *cellDateComponents = [self.calendar components:NSDayCalendarUnit | NSMonthCalendarUnit fromDate:cellDate];
-    NSString *cellTitleString = [NSString stringWithFormat:@"%@, %@", @(cellDateComponents.day), @(cellDateComponents.month)];
+    NSDateComponents *firstDayOfMonthComponents = [self.calendar components:NSMonthCalendarUnit fromDate:firstDayOfMonth];
+    
+    NSString *cellTitleString = @"";
+    if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
+        cellTitleString = [NSString stringWithFormat:@"%@, %@", @(cellDateComponents.day), @(cellDateComponents.month)];
+    }
     cell.dayNumber = cellTitleString;
     
     return cell;
