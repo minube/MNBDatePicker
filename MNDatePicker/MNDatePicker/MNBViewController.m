@@ -22,6 +22,9 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSDateFormatter *headerDateFormatter;
 @property (nonatomic, strong) NSDateFormatter *weekDaysFormatter;
+@property (nonatomic, strong) NSDate *selectedDate;
+@property (nonatomic, strong) NSDate *firstSelectedDate;
+@property (nonatomic, strong) NSDate *lastSelectedDate;
 @end
 
 @implementation MNBViewController
@@ -92,6 +95,11 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     return nil;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.selectedDate = [self dateForCellAtIndexPath:indexPath];
+}
+
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
@@ -122,11 +130,15 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     NSDateComponents *firstDayOfMonthComponents = [self.calendar components:NSMonthCalendarUnit fromDate:firstDayOfMonth];
     
     NSString *cellTitleString = @"";
+    
+    BOOL isSelected = NO;
     if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
         cellTitleString = [NSString stringWithFormat:@"%@", @(cellDateComponents.day)];
+        isSelected = [self isSelectedDate:cellDate];
+        
     }
     cell.dayNumber = cellTitleString;
-    
+    cell.selected = isSelected;
     return cell;
 }
 
@@ -169,6 +181,52 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     return weekdays;
 }
 
+- (BOOL)isSelectedDate:(NSDate *)date
+{
+    if (!self.firstSelectedDate) {
+        return NO;
+    }
+    return [self clampAndCompareDate:date withReferenceDate:self.firstSelectedDate];
+}
+
+- (BOOL)clampAndCompareDate:(NSDate *)date withReferenceDate:(NSDate *)referenceDate
+{
+    NSDate *refDate = [self clampDate:referenceDate toComponents:(NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit)];
+    NSDate *clampedDate = [self clampDate:date toComponents:(NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit)];
+    
+    return [refDate isEqualToDate:clampedDate];
+}
+
+- (NSDate *)clampDate:(NSDate *)date toComponents:(NSUInteger)unitFlags
+{
+    NSDateComponents *components = [self.calendar components:unitFlags fromDate:date];
+    return [self.calendar dateFromComponents:components];
+}
+
+- (NSInteger)sectionForDate:(NSDate *)date
+{
+    return [self.calendar components:NSMonthCalendarUnit fromDate:self.firstDate toDate:date options:0].month;
+}
+
+- (NSIndexPath *)indexPathForCellAtDate:(NSDate *)date
+{
+    if (!date) {
+        return nil;
+    }
+    
+    NSInteger section = [self sectionForDate:date];
+    
+    NSDate *firstOfMonth = [self firstDayOfMonthForSection:section];
+    NSInteger ordinalityOfFirstDay = [self.calendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSWeekCalendarUnit forDate:firstOfMonth];
+    
+    
+    NSDateComponents *dateComponents = [self.calendar components:NSDayCalendarUnit fromDate:date];
+    NSDateComponents *firstOfMonthComponents = [self.calendar components:NSDayCalendarUnit fromDate:firstOfMonth];
+    NSInteger item = (dateComponents.day - firstOfMonthComponents.day) - (1 - ordinalityOfFirstDay);
+    
+    return [NSIndexPath indexPathForItem:item inSection:section];
+}
+
 #pragma mark - Rotation Handling
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
@@ -191,6 +249,42 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     offsetComponents.month = 1;
     offsetComponents.day = -1;
     _lastDate = [self.calendar dateByAddingComponents:offsetComponents toDate:firstDayOfMonth options:0];
+}
+
+- (void)setSelectedDate:(NSDate *)selectedDate
+{
+    if (_selectedDate != selectedDate) {
+        _selectedDate = selectedDate;
+        if (!self.firstSelectedDate) {
+            self.firstSelectedDate = _selectedDate;
+        } else {
+            NSComparisonResult comparison = [self.firstSelectedDate compare:_selectedDate];
+            switch (comparison) {
+                case NSOrderedSame: // selected = firstdate
+                    self.firstSelectedDate = nil;
+                    self.lastSelectedDate = nil;
+                    // Deselect dates in the middle
+                    break;
+                case NSOrderedDescending: // selected < firstdate
+                    if (self.lastSelectedDate) {
+                        self.firstSelectedDate = nil;
+                        self.lastSelectedDate = nil;
+                    } else {
+                        self.lastSelectedDate = self.firstSelectedDate;
+                        self.firstSelectedDate = _selectedDate;
+                    }
+                    break;
+                case NSOrderedAscending: // selected > firstdate
+                    if (self.lastSelectedDate) {
+                        self.firstSelectedDate = nil;
+                        self.lastSelectedDate = nil;
+                    } else {
+                        self.lastSelectedDate = _selectedDate;
+                    }
+                    break;
+            }
+        }
+    }
 }
 
 #pragma mark - Getters
