@@ -13,9 +13,12 @@
 
 static const NSUInteger MNBDatePickerDaysPerWeek = 7;
 static const NSUInteger MNBDatePickerRowsPerMonth = 6; // This value is 6 to have same number of weeks(rows) per month
-static const CGFloat MNBDatePickerHeaderHeight = 100.0f;
+static const CGFloat MNBDatePickerHeaderHeight = 75.0f;
 static const CGFloat MNBDatePickerItemsSpace = 2.0f;
 static const NSUInteger MNBDatePickerYearOffset = 2;
+static const CGFloat MNBDatePickerDefaultItemWidth = 42.0f;
+static const NSUInteger MNBDatePickerCalendarsPerView = 2;
+static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
 @interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, MNBDatePickerCollectionViewLayoutDelegate>
 @property (nonatomic, strong) NSCalendar *calendar;
@@ -61,8 +64,16 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     customLayout.delegate = self;
     customLayout.itemsSpace = MNBDatePickerItemsSpace;
     customLayout.headerHeight = MNBDatePickerHeaderHeight;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:customLayout];
-    self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    CGFloat sectionSpace = 0.0f;
+    if (MNBDatePickerCalendarsPerView > 1) {
+        sectionSpace = MNBDatePickerSectionSpace;
+    }
+    customLayout.sectionsSpace = sectionSpace;
+    CGFloat totalAmountOfVisibleSectionSpace = (MNBDatePickerCalendarsPerView - 1) * sectionSpace;
+    CGFloat totalAmountOfVisibleCalendars = ((MNBDatePickerDefaultItemWidth * MNBDatePickerDaysPerWeek) + ((MNBDatePickerDaysPerWeek - 1) * MNBDatePickerItemsSpace)) * MNBDatePickerCalendarsPerView;
+    CGFloat collectionViewWidth = totalAmountOfVisibleCalendars + totalAmountOfVisibleSectionSpace;
+    CGFloat collectionViewHeight = MNBDatePickerHeaderHeight + (MNBDatePickerDefaultItemWidth * MNBDatePickerRowsPerMonth) + ((MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace);
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, collectionViewWidth , collectionViewHeight) collectionViewLayout:customLayout];
     self.collectionView.backgroundColor = [UIColor redColor];
     self.collectionView.pagingEnabled = YES;
     self.collectionView.delegate = self;
@@ -163,9 +174,9 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 #pragma mark - MNBDatePickerCollectionViewLayoutDelegate
 - (CGSize)sizeForItemsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)layout
 {
-    CGFloat totalItemsSpace = (MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace;
-    CGFloat itemHeight = floorf((CGRectGetHeight(self.collectionView.bounds) - MNBDatePickerHeaderHeight - totalItemsSpace) / MNBDatePickerRowsPerMonth);
-    return CGSizeMake(itemHeight, itemHeight);
+//    CGFloat totalItemsSpace = (MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace;
+//    CGFloat itemHeight = floorf((CGRectGetHeight(self.collectionView.bounds) - MNBDatePickerHeaderHeight - totalItemsSpace) / MNBDatePickerRowsPerMonth);
+    return CGSizeMake(MNBDatePickerDefaultItemWidth, MNBDatePickerDefaultItemWidth);
 }
 
 #pragma mark - Collection View / Calendar Methods
