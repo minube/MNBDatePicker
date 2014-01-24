@@ -17,7 +17,7 @@ static const CGFloat MNBDatePickerHeaderHeight = 75.0f;
 static const CGFloat MNBDatePickerItemsSpace = 2.0f;
 static const NSUInteger MNBDatePickerYearOffset = 2;
 static const CGFloat MNBDatePickerDefaultItemWidth = 42.0f;
-static const NSUInteger MNBDatePickerCalendarsPerView = 2;
+static const NSUInteger MNBDatePickerCalendarsPerView = 3;
 static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
 @interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, MNBDatePickerCollectionViewLayoutDelegate>
@@ -25,6 +25,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSDateFormatter *headerDateFormatter;
 @property (nonatomic, strong) NSDateFormatter *weekDaysFormatter;
+@property (nonatomic, assign) NSInteger currentSection;
 @end
 
 @implementation MNBViewController
@@ -56,6 +57,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 {
     _sameNumberOfWeeksPerMonth = YES;
     _showDaysOnlyBelongsToMonth = YES;
+    _currentSection = 0;
 }
 
 - (void)initCollectionView
@@ -213,23 +215,17 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 #pragma mark - IBActions
 - (void)nextPage:(UIButton *)button
 {
-    if (self.collectionView.contentOffset.x <= self.collectionView.contentSize.width) {
-        CGRect nextFrame = CGRectZero;
-        nextFrame.origin.x = self.collectionView.contentOffset.x + self.collectionView.frame.size.width;
-        nextFrame.origin.y = 0;
-        nextFrame.size = self.collectionView.frame.size;
-        [self.collectionView scrollRectToVisible:nextFrame animated:YES];
+    if (self.currentSection < self.collectionView.numberOfSections - 1) {
+        self.currentSection += MNBDatePickerCalendarsPerView;
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.currentSection] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
     }
 }
 
 - (void)backPage:(UIButton *)button
 {
-    if (self.collectionView.contentOffset.x >= self.collectionView.frame.size.width) {
-        CGRect backFrame = CGRectZero;
-        backFrame.origin.x = self.collectionView.contentOffset.x - self.collectionView.frame.size.width;
-        backFrame.origin.y = 0;
-        backFrame.size = self.collectionView.frame.size;
-        [self.collectionView scrollRectToVisible:backFrame animated:YES];
+    if (self.currentSection > 0) {
+        self.currentSection -= MNBDatePickerCalendarsPerView;
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.currentSection] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
     }
 }
 
