@@ -25,6 +25,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 @property (nonatomic, strong) NSDate *selectedDate;
 @property (nonatomic, strong) NSDate *firstSelectedDate;
 @property (nonatomic, strong) NSDate *lastSelectedDate;
+@property (nonatomic ,strong) NSArray *selectedIndexPaths;
 @end
 
 @implementation MNBViewController
@@ -289,7 +290,42 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
                     break;
             }
         }
+        
+        [self reloadCellsBeteweenFirstSelectedDate:self.firstSelectedDate lastSelectedDate:self.lastSelectedDate];
     }
+}
+
+- (void)reloadCellsBeteweenFirstSelectedDate:(NSDate *)firstSelectedDate lastSelectedDate:(NSDate *)lastSelectedDate
+{
+    NSArray *selectedIndexPaths = [NSArray array];
+    NSArray *deSelectedIndexPaths = [NSArray array];
+    NSArray *indexPathsToReload = [NSArray array];
+    
+    selectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:firstSelectedDate lastDate:lastSelectedDate];
+    NSLog(@"%@", selectedIndexPaths);
+}
+
+- (NSArray *)selectedIndexPathsBetweenFirstDate:(NSDate *)firstDate lastDate:(NSDate *)lastDate
+{
+    NSArray *selectedIndexPaths = nil;
+    
+    if (firstDate) {
+        NSIndexPath *firstDateIndexPath = [self indexPathForCellAtDate:firstDate];
+        if (lastDate) {
+            NSIndexPath *lastDateIndexPath = [self indexPathForCellAtDate:lastDate];
+            NSMutableArray *indexPaths = [NSMutableArray array];
+            for (NSInteger section = firstDateIndexPath.section; section <= lastDateIndexPath.section; section++) {
+                for (NSInteger item = firstDateIndexPath.item; item <= lastDateIndexPath.item; item++) {
+                    [indexPaths addObject:[NSIndexPath indexPathForItem:item inSection:section]];
+                }
+            }
+            selectedIndexPaths = [NSArray arrayWithArray:indexPaths];
+        } else {
+            selectedIndexPaths = [NSArray arrayWithObject:firstDateIndexPath];
+        }
+    }
+    
+    return selectedIndexPaths;
 }
 
 #pragma mark - Getters
