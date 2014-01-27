@@ -96,6 +96,20 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     return nil;
 }
 
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDate *cellDate = [self dateForCellAtIndexPath:indexPath];
+    NSDate *firstDayOfMonth = [self firstDayOfMonthForSection:indexPath.section];
+    NSDateComponents *cellDateComponents = [self.calendar components:NSDayCalendarUnit | NSMonthCalendarUnit fromDate:cellDate];
+    NSDateComponents *firstDayOfMonthComponents = [self.calendar components:NSMonthCalendarUnit fromDate:firstDayOfMonth];
+    
+    if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     self.selectedDate = [self dateForCellAtIndexPath:indexPath];
