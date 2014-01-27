@@ -297,12 +297,61 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 
 - (void)reloadCellsBeteweenFirstSelectedDate:(NSDate *)firstSelectedDate lastSelectedDate:(NSDate *)lastSelectedDate
 {
-    NSArray *selectedIndexPaths = [NSArray array];
-    NSArray *deSelectedIndexPaths = [NSArray array];
-    NSArray *indexPathsToReload = [NSArray array];
+    NSArray *selectedIndexPaths = nil;
+    NSArray *indexPathsToReload = nil;
     
     selectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:firstSelectedDate lastDate:lastSelectedDate];
     NSLog(@"%@", selectedIndexPaths);
+    if (self.selectedIndexPaths) {
+        if (selectedIndexPaths) {
+            // smaller firstIndexPath to relod
+            NSIndexPath *firstOldSelectedIndexPath = [self.selectedIndexPaths objectAtIndex:0];
+            NSIndexPath *firstNewSelectedIndexPath = [selectedIndexPaths objectAtIndex:0];
+            NSIndexPath *firstIndexPathToReload = nil;
+            NSComparisonResult comparisonResult = [firstOldSelectedIndexPath compare:firstNewSelectedIndexPath];
+            switch (comparisonResult) {
+                case NSOrderedSame:
+                    firstIndexPathToReload = firstOldSelectedIndexPath;
+                    break;
+                case NSOrderedAscending:
+                    firstIndexPathToReload = firstOldSelectedIndexPath;
+                    break;
+                case NSOrderedDescending:
+                    firstIndexPathToReload = firstNewSelectedIndexPath;
+                    break;
+            }
+            
+            // bigger lastIndexPath to relod
+            NSIndexPath *lastOldSelectedIndexPath = self.selectedIndexPaths.lastObject;
+            NSIndexPath *lastNewSelectedIndexPath = selectedIndexPaths.lastObject;
+            NSIndexPath *lastIndexPathToReload = nil;
+            comparisonResult = [lastOldSelectedIndexPath compare:lastNewSelectedIndexPath];
+            switch (comparisonResult) {
+                case NSOrderedSame:
+                    lastIndexPathToReload = lastOldSelectedIndexPath;
+                    break;
+                case NSOrderedAscending:
+                    lastIndexPathToReload = firstNewSelectedIndexPath;
+                    break;
+                case NSOrderedDescending:
+                    lastIndexPathToReload = firstOldSelectedIndexPath;
+                    break;
+            }
+            
+            indexPathsToReload = [self indexPathsBetweenFirstIndexPath:firstIndexPathToReload lastIndexPath:lastIndexPathToReload];
+            self.selectedIndexPaths = selectedIndexPaths;
+        } else {
+            indexPathsToReload = [NSArray arrayWithArray:self.selectedIndexPaths];
+            self.selectedIndexPaths = nil;
+        }
+    } else {
+        if (selectedIndexPaths) {
+            indexPathsToReload = selectedIndexPaths;
+            self.selectedIndexPaths = selectedIndexPaths;
+        }
+    }
+    
+    [self.collectionView reloadItemsAtIndexPaths:indexPathsToReload];
 }
 
 - (NSArray *)selectedIndexPathsBetweenFirstDate:(NSDate *)firstDate lastDate:(NSDate *)lastDate
@@ -313,19 +362,43 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
         NSIndexPath *firstDateIndexPath = [self indexPathForCellAtDate:firstDate];
         if (lastDate) {
             NSIndexPath *lastDateIndexPath = [self indexPathForCellAtDate:lastDate];
-            NSMutableArray *indexPaths = [NSMutableArray array];
-            for (NSInteger section = firstDateIndexPath.section; section <= lastDateIndexPath.section; section++) {
-                for (NSInteger item = firstDateIndexPath.item; item <= lastDateIndexPath.item; item++) {
-                    [indexPaths addObject:[NSIndexPath indexPathForItem:item inSection:section]];
-                }
-            }
-            selectedIndexPaths = [NSArray arrayWithArray:indexPaths];
+            selectedIndexPaths = [self indexPathsBetweenFirstIndexPath:firstDateIndexPath lastIndexPath:lastDateIndexPath];
         } else {
             selectedIndexPaths = [NSArray arrayWithObject:firstDateIndexPath];
         }
     }
     
     return selectedIndexPaths;
+}
+
+- (NSArray *)indexPathsBetweenFirstIndexPath:(NSIndexPath *)firstIndexPath lastIndexPath:(NSIndexPath *)lastIndexPath
+{
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    NSIndexPath *actualFirstIndexPath;
+    NSIndexPath *actualLastIndexPath;
+    
+    NSComparisonResult comparisonResult = [firstIndexPath compare:lastIndexPath];
+    switch (comparisonResult) {
+        case NSOrderedSame:
+            return [NSArray arrayWithObjects:firstIndexPath, nil];
+            break;
+        case NSOrderedAscending:
+            actualFirstIndexPath = firstIndexPath;
+            actualLastIndexPath = lastIndexPath;
+            break;
+        case NSOrderedDescending:
+            actualFirstIndexPath = lastIndexPath;
+            actualLastIndexPath = firstIndexPath;
+            break;
+    }
+    
+    for (NSInteger section = actualFirstIndexPath.section; section <= actualLastIndexPath.section; section++) {
+        for (NSInteger item = actualFirstIndexPath.item; item <= actualLastIndexPath.item; item++) {
+            [indexPaths addObject:[NSIndexPath indexPathForItem:item inSection:section]];
+        }
+    }
+    
+    return [NSArray arrayWithArray:indexPaths];
 }
 
 #pragma mark - Getters
