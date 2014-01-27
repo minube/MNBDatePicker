@@ -13,15 +13,19 @@
 
 static const NSUInteger MNBDatePickerDaysPerWeek = 7;
 static const NSUInteger MNBDatePickerRowsPerMonth = 6; // This value is 6 to have same number of weeks(rows) per month
-static const CGFloat MNBDatePickerHeaderHeight = 100.0f;
+static const CGFloat MNBDatePickerHeaderHeight = 75.0f;
 static const CGFloat MNBDatePickerItemsSpace = 2.0f;
 static const NSUInteger MNBDatePickerYearOffset = 2;
+static const CGFloat MNBDatePickerDefaultItemWidth = 42.0f;
+static const NSUInteger MNBDatePickerCalendarsPerView = 2;
+static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
 @interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, MNBDatePickerCollectionViewLayoutDelegate>
 @property (nonatomic, strong) NSCalendar *calendar;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSDateFormatter *headerDateFormatter;
 @property (nonatomic, strong) NSDateFormatter *weekDaysFormatter;
+@property (nonatomic, assign) NSInteger currentSection;
 @property (nonatomic, strong) NSDate *selectedDate;
 @property (nonatomic, strong) NSDate *firstSelectedDate;
 @property (nonatomic, strong) NSDate *lastSelectedDate;
@@ -57,6 +61,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 {
     _sameNumberOfWeeksPerMonth = YES;
     _showDaysOnlyBelongsToMonth = YES;
+    _currentSection = 0;
 }
 
 - (void)initCollectionView
@@ -65,14 +70,57 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     customLayout.delegate = self;
     customLayout.itemsSpace = MNBDatePickerItemsSpace;
     customLayout.headerHeight = MNBDatePickerHeaderHeight;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:customLayout];
-    self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    CGFloat sectionSpace = 0.0f;
+    if (MNBDatePickerCalendarsPerView > 1) {
+        sectionSpace = MNBDatePickerSectionSpace;
+    }
+    customLayout.sectionsSpace = sectionSpace;
+    CGFloat totalAmountOfVisibleSectionSpace = (MNBDatePickerCalendarsPerView - 1) * sectionSpace;
+    CGFloat totalAmountOfVisibleCalendars = ((MNBDatePickerDefaultItemWidth * MNBDatePickerDaysPerWeek) + ((MNBDatePickerDaysPerWeek - 1) * MNBDatePickerItemsSpace)) * MNBDatePickerCalendarsPerView;
+    CGFloat collectionViewWidth = totalAmountOfVisibleCalendars + totalAmountOfVisibleSectionSpace;
+    CGFloat collectionViewHeight = MNBDatePickerHeaderHeight + (MNBDatePickerDefaultItemWidth * MNBDatePickerRowsPerMonth) + ((MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace);
+    UIView *collectionViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, collectionViewWidth, collectionViewHeight)];
+    collectionViewContainer.clipsToBounds = YES;
+    collectionViewContainer.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:collectionViewContainer];
+    
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, collectionViewWidth + MNBDatePickerSectionSpace, collectionViewHeight) collectionViewLayout:customLayout];
     self.collectionView.backgroundColor = [UIColor redColor];
+    self.collectionView.pagingEnabled = YES;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
+    self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, MNBDatePickerSectionSpace);
     [self.collectionView registerClass:[MNBDatePickerViewCell class] forCellWithReuseIdentifier:NSStringFromClass([MNBDatePickerViewCell class])];
     [self.collectionView registerClass:[MNBDatePickerViewHeader class] forSupplementaryViewOfKind:MNBDatePickerCollectionViewLayoutSectionHeaderKind withReuseIdentifier:NSStringFromClass([MNBDatePickerViewHeader class])];
-    [self.view addSubview:self.collectionView];
+    [collectionViewContainer addSubview:self.collectionView];
+}
+
+- (void)initArrows
+{
+    UIButton *nextButton = [[UIButton alloc] init];
+    [nextButton setTitle:@"NEXT" forState:UIControlStateNormal];
+    [nextButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    nextButton.titleLabel.font = [UIFont systemFontOfSize:20];
+    nextButton.backgroundColor = [UIColor grayColor];
+    nextButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [nextButton addTarget:self action:@selector(nextPage:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:nextButton];
+    
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:nextButton attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:-20.0f]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:nextButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:20.0f]];
+    
+    UIButton *backButton = [[UIButton alloc] init];
+    [backButton setTitle:@"BACK" forState:UIControlStateNormal];
+    [backButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    backButton.titleLabel.font = [UIFont systemFontOfSize:20];
+    backButton.backgroundColor = [UIColor grayColor];
+    backButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [backButton addTarget:self action:@selector(backPage:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backButton];
+    
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:backButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeading multiplier:1.0f constant:20.0f]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:backButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f constant:20.0f]];
+    
 }
 
 #pragma mark - View Life Cycle
@@ -80,6 +128,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 {
     [super viewDidLoad];
     [self initCollectionView];
+    [self initArrows];
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -159,9 +208,15 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 #pragma mark - MNBDatePickerCollectionViewLayoutDelegate
 - (CGSize)sizeForItemsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)layout
 {
-    CGFloat totalItemsSpace = (MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace;
-    CGFloat itemHeight = floorf((CGRectGetHeight(self.collectionView.bounds) - MNBDatePickerHeaderHeight - totalItemsSpace) / MNBDatePickerRowsPerMonth);
-    return CGSizeMake(itemHeight, itemHeight);
+//    CGFloat totalItemsSpace = (MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace;
+//    CGFloat itemHeight = floorf((CGRectGetHeight(self.collectionView.bounds) - MNBDatePickerHeaderHeight - totalItemsSpace) / MNBDatePickerRowsPerMonth);
+    return CGSizeMake(MNBDatePickerDefaultItemWidth, MNBDatePickerDefaultItemWidth);
+}
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    self.currentSection = [self firstVisibleIndexPath].section;
 }
 
 #pragma mark - Collection View / Calendar Methods
@@ -251,6 +306,36 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
 - (MNBDatePickerViewCell *)cellForItemAtDate:(NSDate *)date
 {
     return (MNBDatePickerViewCell *)[self.collectionView cellForItemAtIndexPath:[self indexPathForCellAtDate:date]];
+}
+
+- (NSIndexPath *)firstVisibleIndexPath
+{
+    NSArray *visibleIndexPaths = self.collectionView.indexPathsForVisibleItems;
+    NSIndexPath *firstVisibleIndexPath = visibleIndexPaths.lastObject;
+    for (NSIndexPath *indexPath in visibleIndexPaths) {
+        if ([firstVisibleIndexPath compare:indexPath] == NSOrderedDescending) {
+            firstVisibleIndexPath = indexPath;
+        }
+    }
+    
+    return firstVisibleIndexPath;
+}
+
+#pragma mark - IBActions
+- (void)nextPage:(UIButton *)button
+{
+    if (self.currentSection < self.collectionView.numberOfSections - 1) {
+        self.currentSection += MNBDatePickerCalendarsPerView;
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.currentSection] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+    }
+}
+
+- (void)backPage:(UIButton *)button
+{
+    if (self.currentSection > 0) {
+        self.currentSection -= MNBDatePickerCalendarsPerView;
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.currentSection] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+    }
 }
 
 #pragma mark - Rotation Handling
