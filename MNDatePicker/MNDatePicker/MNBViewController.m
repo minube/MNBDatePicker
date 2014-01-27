@@ -17,7 +17,7 @@ static const CGFloat MNBDatePickerHeaderHeight = 75.0f;
 static const CGFloat MNBDatePickerItemsSpace = 2.0f;
 static const NSUInteger MNBDatePickerYearOffset = 2;
 static const CGFloat MNBDatePickerDefaultItemWidth = 42.0f;
-static const NSUInteger MNBDatePickerCalendarsPerView = 3;
+static const NSUInteger MNBDatePickerCalendarsPerView = 2;
 static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
 @interface MNBViewController () <UICollectionViewDelegate, UICollectionViewDataSource, MNBDatePickerCollectionViewLayoutDelegate>
@@ -75,14 +75,20 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     CGFloat totalAmountOfVisibleCalendars = ((MNBDatePickerDefaultItemWidth * MNBDatePickerDaysPerWeek) + ((MNBDatePickerDaysPerWeek - 1) * MNBDatePickerItemsSpace)) * MNBDatePickerCalendarsPerView;
     CGFloat collectionViewWidth = totalAmountOfVisibleCalendars + totalAmountOfVisibleSectionSpace;
     CGFloat collectionViewHeight = MNBDatePickerHeaderHeight + (MNBDatePickerDefaultItemWidth * MNBDatePickerRowsPerMonth) + ((MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace);
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, collectionViewWidth , collectionViewHeight) collectionViewLayout:customLayout];
+    UIView *collectionViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, collectionViewWidth, collectionViewHeight)];
+    collectionViewContainer.clipsToBounds = YES;
+    collectionViewContainer.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:collectionViewContainer];
+    
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, collectionViewWidth + MNBDatePickerSectionSpace, collectionViewHeight) collectionViewLayout:customLayout];
     self.collectionView.backgroundColor = [UIColor redColor];
     self.collectionView.pagingEnabled = YES;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
+    self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, MNBDatePickerSectionSpace);
     [self.collectionView registerClass:[MNBDatePickerViewCell class] forCellWithReuseIdentifier:NSStringFromClass([MNBDatePickerViewCell class])];
     [self.collectionView registerClass:[MNBDatePickerViewHeader class] forSupplementaryViewOfKind:MNBDatePickerCollectionViewLayoutSectionHeaderKind withReuseIdentifier:NSStringFromClass([MNBDatePickerViewHeader class])];
-    [self.view addSubview:self.collectionView];
+    [collectionViewContainer addSubview:self.collectionView];
 }
 
 - (void)initArrows
@@ -181,6 +187,12 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     return CGSizeMake(MNBDatePickerDefaultItemWidth, MNBDatePickerDefaultItemWidth);
 }
 
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    self.currentSection = [self firstVisibleIndexPath].section;
+}
+
 #pragma mark - Collection View / Calendar Methods
 - (NSDate *)firstDayOfMonthForSection:(NSInteger)section
 {
@@ -210,6 +222,19 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
                     arrayByAddingObjectsFromArray:[weekdays subarrayWithRange:NSMakeRange(0, firstWeekdayIndex)]];
     }
     return weekdays;
+}
+
+- (NSIndexPath *)firstVisibleIndexPath
+{
+    NSArray *visibleIndexPaths = self.collectionView.indexPathsForVisibleItems;
+    NSIndexPath *firstVisibleIndexPath = visibleIndexPaths.lastObject;
+    for (NSIndexPath *indexPath in visibleIndexPaths) {
+        if ([firstVisibleIndexPath compare:indexPath] == NSOrderedDescending) {
+            firstVisibleIndexPath = indexPath;
+        }
+    }
+    
+    return firstVisibleIndexPath;
 }
 
 #pragma mark - IBActions
