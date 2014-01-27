@@ -136,7 +136,6 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
         cellTitleString = [NSString stringWithFormat:@"%@", @(cellDateComponents.day)];
         isSelected = [self isSelectedIndexPath:indexPath];
-        
     }
     cell.dayNumber = cellTitleString;
     cell.selected = isSelected;
@@ -273,6 +272,7 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
         if (!self.firstSelectedDate) {
             self.firstSelectedDate = _selectedDate;
             newSelectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:self.firstSelectedDate lastDate:nil];
+            selectedIndexPaths = newSelectedIndexPaths;
         } else {
             NSComparisonResult comparison = [self.firstSelectedDate compare:_selectedDate];
             switch (comparison) {
