@@ -352,6 +352,9 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
             self.firstSelectedDate = _selectedDate;
             newSelectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:self.firstSelectedDate lastDate:nil];
             selectedIndexPaths = newSelectedIndexPaths;
+            if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelection)]) {
+                [self.delegate mnbDatePickerDidChangeSelection];
+            }
         } else {
             NSComparisonResult comparison = [self.firstSelectedDate compare:_selectedDate];
             switch (comparison) {
@@ -359,6 +362,9 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
                     self.firstSelectedDate = nil;
                     self.lastSelectedDate = nil;
                     selectedIndexPaths  = [NSArray arrayWithObject:[self indexPathForCellAtDate:_selectedDate]];
+                    if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidCancelSelection)]) {
+                        [self.delegate mnbDatePickerDidCancelSelection];
+                    }
                     break;
                 case NSOrderedDescending: // selected < firstdate
                     if (self.lastSelectedDate) {
@@ -369,11 +375,17 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
                         selectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:_selectedDate lastDate:self.firstSelectedDate];
                         self.firstSelectedDate = nil;
                     }
+                    if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidCancelSelection)]) {
+                        [self.delegate mnbDatePickerDidCancelSelection];
+                    }
                     break;
                 case NSOrderedAscending: // selected > firstdate
                     self.lastSelectedDate = _selectedDate;
                     newSelectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:self.firstSelectedDate lastDate:self.lastSelectedDate];
                     selectedIndexPaths = newSelectedIndexPaths;
+                    if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelection)]) {
+                        [self.delegate mnbDatePickerDidChangeSelection];
+                    }
                     break;
             }
         }
@@ -560,6 +572,16 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 }
 
 #pragma mark - Getters
+- (NSDate *)initialSelectedDate
+{
+    return self.firstSelectedDate;
+}
+
+- (NSDate *)finalSelectedDate
+{
+    return self.lastSelectedDate;
+}
+
 - (NSDateFormatter *)headerDateFormatter
 {
     if (!_headerDateFormatter) {
