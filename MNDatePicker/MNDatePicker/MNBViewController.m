@@ -306,15 +306,9 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
                     }
                     break;
                 case NSOrderedAscending: // selected > firstdate
-                    if (self.lastSelectedDate) {
-                        selectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:self.firstSelectedDate lastDate:_selectedDate];
-                        self.firstSelectedDate = nil;
-                        self.lastSelectedDate = nil;
-                    } else {
-                        self.lastSelectedDate = _selectedDate;
-                        newSelectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:self.firstSelectedDate lastDate:self.lastSelectedDate];
-                        selectedIndexPaths = newSelectedIndexPaths;
-                    }
+                    self.lastSelectedDate = _selectedDate;
+                    newSelectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:self.firstSelectedDate lastDate:self.lastSelectedDate];
+                    selectedIndexPaths = newSelectedIndexPaths;
                     break;
             }
         }
