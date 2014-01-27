@@ -159,16 +159,6 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     return [self.calendar dateByAddingComponents:offset toDate:self.firstDate options:0];
 }
 
-- (NSDate *)dateForCellAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSDate *firstOfMonth = [self firstDayOfMonthForSection:indexPath.section];
-    NSInteger ordinalityOfFirstDay = [self.calendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSWeekCalendarUnit forDate:firstOfMonth];
-    NSDateComponents *dateComponents = [NSDateComponents new];
-    dateComponents.day = (1 - ordinalityOfFirstDay) + indexPath.item;
-    
-    return [self.calendar dateByAddingComponents:dateComponents toDate:firstOfMonth options:0];
-}
-
 - (NSArray *)daysOfTheWeek
 {
     // adjust array depending on which weekday should be first
@@ -225,6 +215,21 @@ static const NSUInteger MNBDatePickerYearOffset = 2;
     NSInteger item = (dateComponents.day - firstOfMonthComponents.day) - (1 - ordinalityOfFirstDay);
     
     return [NSIndexPath indexPathForItem:item inSection:section];
+}
+
+- (NSDate *)dateForCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDate *firstOfMonth = [self firstDayOfMonthForSection:indexPath.section];
+    NSInteger ordinalityOfFirstDay = [self.calendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSWeekCalendarUnit forDate:firstOfMonth];
+    NSDateComponents *dateComponents = [NSDateComponents new];
+    dateComponents.day = (1 - ordinalityOfFirstDay) + indexPath.item;
+    
+    return [self.calendar dateByAddingComponents:dateComponents toDate:firstOfMonth options:0];
+}
+
+- (MNBDatePickerViewCell *)cellForItemAtDate:(NSDate *)date
+{
+    return (MNBDatePickerViewCell *)[self.collectionView cellForItemAtIndexPath:[self indexPathForCellAtDate:date]];
 }
 
 #pragma mark - Rotation Handling
