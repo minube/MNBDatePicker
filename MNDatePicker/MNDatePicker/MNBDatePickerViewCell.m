@@ -52,6 +52,16 @@
     self.dayLabel.text = @"";
 }
 
+- (void)setSelected:(BOOL)selected
+{
+    [super setSelected:selected];
+    if (selected) {
+        self.backgroundColor = [UIColor purpleColor];
+    } else {
+        self.backgroundColor = [UIColor greenColor];
+    }
+}
+
 #pragma mark - Setters
 - (void)setDayNumber:(NSString *)dayNumber
 {
