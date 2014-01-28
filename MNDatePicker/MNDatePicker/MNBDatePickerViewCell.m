@@ -7,9 +7,11 @@
 //
 
 #import "MNBDatePickerViewCell.h"
+#import "MNBTriangleView.h"
 
 @interface MNBDatePickerViewCell ()
 @property (nonatomic, strong) UILabel *dayLabel;
+@property (nonatomic, strong) MNBTriangleView *triangle;
 @end
 
 @implementation MNBDatePickerViewCell
@@ -27,6 +29,7 @@
 {
     [self initCell];
     [self initDayLabel];
+    [self initTriangle];
 }
 
 - (void)initCell
@@ -46,6 +49,12 @@
     self.dayLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dayLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0]];
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dayLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
+}
+
+- (void)initTriangle
+{
+    self.triangle = [[MNBTriangleView alloc] initWithFrame:CGRectMake(self.bounds.size.width, 0.0f, 9.0f, self.bounds.size.height) color:colorWithRGBA(248, 168, 68, 1.0f)];
+    [self addSubview:self.triangle];
 }
 
 - (void)prepareForReuse
