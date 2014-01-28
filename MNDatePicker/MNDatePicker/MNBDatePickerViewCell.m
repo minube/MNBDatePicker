@@ -31,7 +31,7 @@
 
 - (void)initCell
 {
-    self.backgroundColor = colorWithRGBA(255, 255, 255, 0.07f);
+    self.backgroundColor = colorWithRGBA(39, 44, 51, 1.0f);
 }
 
 - (void)initDayLabel
@@ -58,9 +58,9 @@
 {
     [super setSelected:selected];
     if (selected) {
-        self.backgroundColor = [UIColor purpleColor];
+        self.backgroundColor = colorWithRGBA(248, 168, 68, 1.0f);
     } else {
-        self.backgroundColor = colorWithRGBA(255, 255, 255, 0.07f);
+        self.backgroundColor = colorWithRGBA(39, 44, 51, 1.0f);
     }
 }
 
