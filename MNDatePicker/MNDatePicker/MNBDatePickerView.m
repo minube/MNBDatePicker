@@ -79,7 +79,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     [self addSubview:collectionViewContainer];
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, collectionViewWidth + MNBDatePickerSectionSpace, collectionViewHeight) collectionViewLayout:customLayout];
-    self.collectionView.backgroundColor = [UIColor redColor];
+    self.collectionView.backgroundColor = colorWithRGBA(15, 20, 28, 1);
     self.collectionView.pagingEnabled = YES;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -92,27 +92,21 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 - (void)initArrows
 {
     UIButton *nextButton = [[UIButton alloc] init];
-    [nextButton setTitle:@"NEXT" forState:UIControlStateNormal];
-    [nextButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    nextButton.titleLabel.font = [UIFont systemFontOfSize:20];
-    nextButton.backgroundColor = [UIColor grayColor];
+    [nextButton setImage:[UIImage imageNamed:@"rightArrow"] forState:UIControlStateNormal];
     nextButton.translatesAutoresizingMaskIntoConstraints = NO;
     [nextButton addTarget:self action:@selector(nextPage:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:nextButton];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:nextButton attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:-20.0f]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:nextButton attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:-25.0f]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:nextButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:20.0f]];
     
     UIButton *backButton = [[UIButton alloc] init];
-    [backButton setTitle:@"BACK" forState:UIControlStateNormal];
-    [backButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    backButton.titleLabel.font = [UIFont systemFontOfSize:20];
-    backButton.backgroundColor = [UIColor grayColor];
+    [backButton setImage:[UIImage imageNamed:@"leftArrow"] forState:UIControlStateNormal];
     backButton.translatesAutoresizingMaskIntoConstraints = NO;
     [backButton addTarget:self action:@selector(backPage:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:backButton];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:backButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0f constant:20.0f]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:backButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0f constant:25.0f]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:backButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:20.0f]];
     
 }

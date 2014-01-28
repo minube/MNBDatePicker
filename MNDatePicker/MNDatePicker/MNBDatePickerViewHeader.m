@@ -8,8 +8,8 @@
 
 #import "MNBDatePickerViewHeader.h"
 
-static const CGFloat MNBDatePickerHeaderTextSize = 20.0f;
-static const CGFloat MNBDatePickerWeekDaysFontSize = 15.0f;
+static const CGFloat MNBDatePickerHeaderTextSize = 17.0f;
+static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
 
 @interface MNBDatePickerViewHeader ()
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -42,26 +42,28 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 15.0f;
 
 - (void)initView
 {
-    self.backgroundColor = [UIColor yellowColor];
+    self.backgroundColor = colorWithRGBA(15, 20, 28, 0.77f);
 }
 
 - (void)initTitleLabel
 {
     _titleLabel = [[UILabel alloc] init];
-    _titleLabel.font = [UIFont systemFontOfSize:MNBDatePickerHeaderTextSize];
+    _titleLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerHeaderTextSize];
+    _titleLabel.textColor = colorWithRGBA(255, 255, 255, 0.9f);
     _titleLabel.backgroundColor = [UIColor clearColor];
     [self addSubview:self.titleLabel];
     
     self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:0.0f]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:20.0f]];
 }
 
 - (void)initWeekDaysLabels
 {
     // First WeekDay
     UILabel *firstWeekDayLabel = [[UILabel alloc] init];
-    firstWeekDayLabel.font = [UIFont systemFontOfSize:MNBDatePickerWeekDaysFontSize];
+    firstWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
+    firstWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
     firstWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     firstWeekDayLabel.backgroundColor = [UIColor clearColor];
     firstWeekDayLabel.text = @"";
@@ -71,7 +73,8 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 15.0f;
     
     // Second WeekDay
     UILabel *secondWeekDayLabel = [[UILabel alloc] init];
-    secondWeekDayLabel.font = [UIFont systemFontOfSize:MNBDatePickerWeekDaysFontSize];
+    secondWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
+    secondWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
     secondWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     secondWeekDayLabel.backgroundColor = [UIColor clearColor];
     secondWeekDayLabel.text = @"";
@@ -81,7 +84,8 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 15.0f;
     
     // Third WeekDay
     UILabel *thirdWeekDayLabel = [[UILabel alloc] init];
-    thirdWeekDayLabel.font = [UIFont systemFontOfSize:MNBDatePickerWeekDaysFontSize];
+    thirdWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
+    thirdWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
     thirdWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     thirdWeekDayLabel.backgroundColor = [UIColor clearColor];
     thirdWeekDayLabel.text = @"";
@@ -91,7 +95,8 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 15.0f;
     
     // Forth WeekDay
     UILabel *forthWeekDayLabel = [[UILabel alloc] init];
-    forthWeekDayLabel.font = [UIFont systemFontOfSize:MNBDatePickerWeekDaysFontSize];
+    forthWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
+    forthWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
     forthWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     forthWeekDayLabel.backgroundColor = [UIColor clearColor];
     forthWeekDayLabel.text = @"";
@@ -101,7 +106,8 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 15.0f;
     
     // Fifth WeekDay
     UILabel *fifthWeekDayLabel = [[UILabel alloc] init];
-    fifthWeekDayLabel.font = [UIFont systemFontOfSize:MNBDatePickerWeekDaysFontSize];
+    fifthWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
+    fifthWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
     fifthWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     fifthWeekDayLabel.backgroundColor = [UIColor clearColor];
     fifthWeekDayLabel.text = @"";
@@ -111,7 +117,8 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 15.0f;
     
     // Sixth WeekDay
     UILabel *sixthWeekDayLabel = [[UILabel alloc] init];
-    sixthWeekDayLabel.font = [UIFont systemFontOfSize:MNBDatePickerWeekDaysFontSize];
+    sixthWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
+    sixthWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
     sixthWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     sixthWeekDayLabel.backgroundColor = [UIColor clearColor];
     sixthWeekDayLabel.text = @"";
@@ -121,7 +128,8 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 15.0f;
     
     // Seventh WeekDay
     UILabel *seventhWeekDayLabel = [[UILabel alloc] init];
-    seventhWeekDayLabel.font = [UIFont systemFontOfSize:MNBDatePickerWeekDaysFontSize];
+    seventhWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
+    seventhWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
     seventhWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     seventhWeekDayLabel.backgroundColor = [UIColor clearColor];
     seventhWeekDayLabel.text = @"";
@@ -133,9 +141,9 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 15.0f;
     NSDictionary *horizontalViewsDictionary = NSDictionaryOfVariableBindings (firstWeekDayLabel, secondWeekDayLabel, thirdWeekDayLabel, forthWeekDayLabel, fifthWeekDayLabel, sixthWeekDayLabel, seventhWeekDayLabel);
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:visualFormatHorizontalConstraint options:NSLayoutFormatAlignAllBottom metrics:nil views:horizontalViewsDictionary]];
     
-    NSString *visualVerticalFormatConstraint = @"V:[firstWeekDayLabel]|";
+    NSString *visualVerticalFormatConstraint = @"V:[firstWeekDayLabel]-5-|";
     NSDictionary *verticalViewsDictionary = NSDictionaryOfVariableBindings (firstWeekDayLabel);
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:visualVerticalFormatConstraint options:NSLayoutFormatAlignAllBottom metrics:nil views:verticalViewsDictionary]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:visualVerticalFormatConstraint options:0 metrics:nil views:verticalViewsDictionary]];
 }
 
 - (void)prepareForReuse

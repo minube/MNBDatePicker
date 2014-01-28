@@ -31,7 +31,7 @@
 
 - (void)initCell
 {
-    self.backgroundColor = [UIColor greenColor];
+    self.backgroundColor = colorWithRGBA(39, 44, 51, 1.0f);
 }
 
 - (void)initDayLabel
@@ -39,6 +39,8 @@
     _dayLabel = [[UILabel alloc] init];
     self.dayLabel.textAlignment = NSTextAlignmentCenter;
     self.dayLabel.backgroundColor = [UIColor clearColor];
+    self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:17];
+    self.dayLabel.textColor = colorWithRGBA(255, 255, 255, 0.9f);
     [self.contentView addSubview:self.dayLabel];
     
     self.dayLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -56,9 +58,9 @@
 {
     [super setSelected:selected];
     if (selected) {
-        self.backgroundColor = [UIColor purpleColor];
+        self.backgroundColor = colorWithRGBA(248, 168, 68, 1.0f);
     } else {
-        self.backgroundColor = [UIColor greenColor];
+        self.backgroundColor = colorWithRGBA(39, 44, 51, 1.0f);
     }
 }
 
