@@ -59,10 +59,10 @@
     self.firstSelectedDayView.alpha = 0.0f;
     
     UIView *squareView = [[UIView alloc] initWithFrame:CGRectMake(0, 0.0f, self.firstSelectedDayView.bounds.size.width - 9.0f, self.firstSelectedDayView.bounds.size.height)];
-    squareView.backgroundColor = colorWithRGBA(248, 168, 68, 1.0f);
+    squareView.backgroundColor = colorWithRGBA(244, 129, 0, 1.0f);
     [self.firstSelectedDayView addSubview:squareView];
     
-    MNBTriangleView *triangle = [[MNBTriangleView alloc] initWithFrame:CGRectMake(self.firstSelectedDayView.bounds.size.width - 9.0f, 0.0f, 9.0f, self.firstSelectedDayView.bounds.size.height) color:colorWithRGBA(248, 168, 68, 1.0f)];
+    MNBTriangleView *triangle = [[MNBTriangleView alloc] initWithFrame:CGRectMake(self.firstSelectedDayView.bounds.size.width - 9.0f, 0.0f, 9.0f, self.firstSelectedDayView.bounds.size.height) color:colorWithRGBA(244, 129, 0, 1.0f)];
     [self.firstSelectedDayView addSubview:triangle];
     
     [self.contentView insertSubview:self.firstSelectedDayView belowSubview:self.dayLabel];
@@ -88,6 +88,17 @@
 - (void)setDayNumber:(NSString *)dayNumber
 {
     self.dayLabel.text = dayNumber;
+}
+
+- (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay
+{
+    if (isFirstSelectedDay) {
+        self.firstSelectedDayView.alpha = 1.0f;
+        self.dayLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize];
+    } else {
+        self.firstSelectedDayView.alpha = 0.0f;
+        self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
+    }
 }
 
 @end

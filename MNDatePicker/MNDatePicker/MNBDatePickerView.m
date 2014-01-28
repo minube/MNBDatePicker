@@ -176,12 +176,17 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     NSString *cellTitleString = @"";
     
     BOOL isSelected = NO;
+    BOOL isFirstSelectedDate = NO;
     if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
         cellTitleString = [NSString stringWithFormat:@"%@", @(cellDateComponents.day)];
         isSelected = [self isSelectedIndexPath:indexPath];
+        if (isSelected && [[self indexPathForCellAtDate:self.firstSelectedDate] compare:indexPath] == NSOrderedSame) {
+            isFirstSelectedDate = YES;
+        }
     }
     cell.dayNumber = cellTitleString;
     cell.selected = isSelected;
+    cell.isFirstSelectedDay = isFirstSelectedDate;
     return cell;
 }
 
