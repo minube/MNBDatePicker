@@ -182,11 +182,12 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
         isSelected = [self isSelectedIndexPath:indexPath];
         if (isSelected && [[self indexPathForCellAtDate:self.firstSelectedDate] compare:indexPath] == NSOrderedSame) {
             isFirstSelectedDate = YES;
+            isSelected = NO;
         }
     }
     cell.dayNumber = cellTitleString;
-    cell.selected = isSelected;
     cell.isFirstSelectedDay = isFirstSelectedDate;
+    cell.isSelectedDay = isSelected;
     return cell;
 }
 
@@ -347,10 +348,12 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
         _selectedDate = selectedDate;
         NSArray *newSelectedIndexPaths = nil;
         NSArray *selectedIndexPaths = nil;
+        
         if (!self.firstSelectedDate) {
             self.firstSelectedDate = _selectedDate;
             newSelectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:self.firstSelectedDate lastDate:nil];
-            selectedIndexPaths = newSelectedIndexPaths;
+            MNBDatePickerViewCell *cell = [self cellForItemAtDate:self.firstSelectedDate];
+            [cell setIsFirstSelectedDay:YES animated:YES];
             if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelection)]) {
                 [self.delegate mnbDatePickerDidChangeSelection];
             }
@@ -358,12 +361,14 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
             NSComparisonResult comparison = [self.firstSelectedDate compare:_selectedDate];
             switch (comparison) {
                 case NSOrderedSame: // selected = firstdate
+                {
                     self.firstSelectedDate = nil;
                     self.lastSelectedDate = nil;
                     selectedIndexPaths  = [NSArray arrayWithObject:[self indexPathForCellAtDate:_selectedDate]];
                     if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidCancelSelection)]) {
                         [self.delegate mnbDatePickerDidCancelSelection];
                     }
+                }
                     break;
                 case NSOrderedDescending: // selected < firstdate
                     if (self.lastSelectedDate) {

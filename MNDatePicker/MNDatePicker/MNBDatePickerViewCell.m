@@ -74,17 +74,21 @@
     self.dayLabel.text = @"";
 }
 
+#pragma mark - Setters
 - (void)setSelected:(BOOL)selected
 {
     [super setSelected:selected];
-    if (selected) {
+}
+
+- (void)setIsSelectedDay:(BOOL)isSelectedDay
+{
+    if (isSelectedDay) {
         self.backgroundColor = colorWithRGBA(248, 168, 68, 1.0f);
     } else {
         self.backgroundColor = colorWithRGBA(39, 44, 51, 1.0f);
     }
 }
 
-#pragma mark - Setters
 - (void)setDayNumber:(NSString *)dayNumber
 {
     self.dayLabel.text = dayNumber;
@@ -92,13 +96,24 @@
 
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay
 {
-    if (isFirstSelectedDay) {
-        self.firstSelectedDayView.alpha = 1.0f;
-        self.dayLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize];
-    } else {
-        self.firstSelectedDayView.alpha = 0.0f;
-        self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
-    }
+    [self setIsFirstSelectedDay:isFirstSelectedDay animated:NO];
+}
+
+- (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated
+{
+    [self setIsFirstSelectedDay:isFirstSelectedDay animated:animated completion:nil];
+}
+
+- (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated completion:(void (^)(BOOL finished))completion
+{
+    self.dayLabel.font = isFirstSelectedDay ? [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize] : [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
+    [UIView animateWithDuration:animated ? 0.2f : 0.0f delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.firstSelectedDayView.alpha = isFirstSelectedDay ? 1.0f : 0.0f;
+    } completion:^(BOOL finished) {
+        if (completion) {
+            completion(YES);
+        }
+    }];
 }
 
 @end
