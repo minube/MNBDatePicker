@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		456E62E01896BB05002ED076 /* MNBDatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 456E62DF1896BB05002ED076 /* MNBDatePickerView.m */; };
+		4590F6871897C8AB00FAED4A /* UIColor+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590F6861897C8AB00FAED4A /* UIColor+Utils.m */; };
 		45CECD73188FAD6700939430 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CECD72188FAD6700939430 /* Foundation.framework */; };
 		45CECD75188FAD6800939430 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CECD74188FAD6800939430 /* CoreGraphics.framework */; };
 		45CECD77188FAD6800939430 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CECD76188FAD6800939430 /* UIKit.framework */; };
@@ -39,6 +40,8 @@
 /* Begin PBXFileReference section */
 		456E62DE1896BB05002ED076 /* MNBDatePickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerView.h; sourceTree = "<group>"; };
 		456E62DF1896BB05002ED076 /* MNBDatePickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerView.m; sourceTree = "<group>"; };
+		4590F6851897C8AB00FAED4A /* UIColor+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Utils.h"; sourceTree = "<group>"; };
+		4590F6861897C8AB00FAED4A /* UIColor+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Utils.m"; sourceTree = "<group>"; };
 		45CECD6F188FAD6700939430 /* MNDatePicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MNDatePicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45CECD72188FAD6700939430 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		45CECD74188FAD6800939430 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -89,6 +92,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4590F6841897C8AB00FAED4A /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				4590F6851897C8AB00FAED4A /* UIColor+Utils.h */,
+				4590F6861897C8AB00FAED4A /* UIColor+Utils.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
 		45CECD66188FAD6700939430 = {
 			isa = PBXGroup;
 			children = (
@@ -135,6 +147,7 @@
 				456E62DE1896BB05002ED076 /* MNBDatePickerView.h */,
 				456E62DF1896BB05002ED076 /* MNBDatePickerView.m */,
 				45CECD8A188FAD6800939430 /* Images.xcassets */,
+				4590F6841897C8AB00FAED4A /* Categories */,
 				45CECD79188FAD6800939430 /* Supporting Files */,
 			);
 			path = MNDatePicker;
@@ -269,6 +282,7 @@
 				45CECD89188FAD6800939430 /* MNBViewController.m in Sources */,
 				45CECDAC188FD20400939430 /* MNBDatePickerViewHeader.m in Sources */,
 				45CECDBB188FFDB800939430 /* MNBDatePickerCollectionViewLayout.m in Sources */,
+				4590F6871897C8AB00FAED4A /* UIColor+Utils.m in Sources */,
 				456E62E01896BB05002ED076 /* MNBDatePickerView.m in Sources */,
 				45CECD83188FAD6800939430 /* MNBAppDelegate.m in Sources */,
 				45CECDA9188FC12A00939430 /* MNBDatePickerViewCell.m in Sources */,

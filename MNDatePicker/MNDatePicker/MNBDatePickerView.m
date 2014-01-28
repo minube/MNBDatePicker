@@ -79,7 +79,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     [self addSubview:collectionViewContainer];
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, collectionViewWidth + MNBDatePickerSectionSpace, collectionViewHeight) collectionViewLayout:customLayout];
-    self.collectionView.backgroundColor = [UIColor redColor];
+    self.collectionView.backgroundColor = colorWithRGBA(15, 20, 28, 1);
     self.collectionView.pagingEnabled = YES;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
