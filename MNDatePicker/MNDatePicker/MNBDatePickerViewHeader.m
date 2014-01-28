@@ -55,7 +55,7 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
     
     self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:0.0f]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0f constant:20.0f]];
 }
 
 - (void)initWeekDaysLabels
@@ -141,9 +141,9 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
     NSDictionary *horizontalViewsDictionary = NSDictionaryOfVariableBindings (firstWeekDayLabel, secondWeekDayLabel, thirdWeekDayLabel, forthWeekDayLabel, fifthWeekDayLabel, sixthWeekDayLabel, seventhWeekDayLabel);
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:visualFormatHorizontalConstraint options:NSLayoutFormatAlignAllBottom metrics:nil views:horizontalViewsDictionary]];
     
-    NSString *visualVerticalFormatConstraint = @"V:[firstWeekDayLabel]|";
+    NSString *visualVerticalFormatConstraint = @"V:[firstWeekDayLabel]-5-|";
     NSDictionary *verticalViewsDictionary = NSDictionaryOfVariableBindings (firstWeekDayLabel);
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:visualVerticalFormatConstraint options:NSLayoutFormatAlignAllBottom metrics:nil views:verticalViewsDictionary]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:visualVerticalFormatConstraint options:0 metrics:nil views:verticalViewsDictionary]];
 }
 
 - (void)prepareForReuse
