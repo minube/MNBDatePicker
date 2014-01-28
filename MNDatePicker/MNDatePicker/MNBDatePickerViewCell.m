@@ -11,7 +11,7 @@
 
 @interface MNBDatePickerViewCell ()
 @property (nonatomic, strong) UILabel *dayLabel;
-@property (nonatomic, strong) MNBTriangleView *triangle;
+@property (nonatomic, strong) UIView *firstSelectedDayView;
 @end
 
 @implementation MNBDatePickerViewCell
@@ -29,7 +29,7 @@
 {
     [self initCell];
     [self initDayLabel];
-    [self initTriangle];
+    [self initFirstDayView];
 }
 
 - (void)initCell
@@ -51,10 +51,21 @@
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dayLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
 }
 
-- (void)initTriangle
+- (void)initFirstDayView
 {
-    self.triangle = [[MNBTriangleView alloc] initWithFrame:CGRectMake(self.bounds.size.width, 0.0f, 9.0f, self.bounds.size.height) color:colorWithRGBA(248, 168, 68, 1.0f)];
-    [self addSubview:self.triangle];
+    self.firstSelectedDayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0.0f, self.bounds.size.width + 9.0f, self.bounds.size.height)];
+    self.firstSelectedDayView.backgroundColor = [UIColor clearColor];
+    self.firstSelectedDayView.clipsToBounds = YES;
+    self.firstSelectedDayView.alpha = 0.0f;
+    
+    UIView *squareView = [[UIView alloc] initWithFrame:CGRectMake(0, 0.0f, self.firstSelectedDayView.bounds.size.width - 9.0f, self.firstSelectedDayView.bounds.size.height)];
+    squareView.backgroundColor = colorWithRGBA(248, 168, 68, 1.0f);
+    [self.firstSelectedDayView addSubview:squareView];
+    
+    MNBTriangleView *triangle = [[MNBTriangleView alloc] initWithFrame:CGRectMake(self.firstSelectedDayView.bounds.size.width - 9.0f, 0.0f, 9.0f, self.firstSelectedDayView.bounds.size.height) color:colorWithRGBA(248, 168, 68, 1.0f)];
+    [self.firstSelectedDayView addSubview:triangle];
+    
+    [self.contentView insertSubview:self.firstSelectedDayView belowSubview:self.dayLabel];
 }
 
 - (void)prepareForReuse
