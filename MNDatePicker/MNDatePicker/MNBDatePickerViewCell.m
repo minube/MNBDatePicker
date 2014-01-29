@@ -9,6 +9,9 @@
 #import "MNBDatePickerViewCell.h"
 #import "MNBTriangleView.h"
 
+static NSString * const MNBDatePickerViewCellBounceInAnimationKey = @"MNBDatePickerViewCellBounceInAnimation";
+static NSString * const MNBDatePickerViewCellBounceOutAnimationKey = @"MNBDatePickerViewCellBounceOutAnimation";
+
 @interface MNBDatePickerViewCell ()
 @property (nonatomic, strong) UILabel *dayLabel;
 @property (nonatomic, strong) UIView *firstSelectedDayView;
@@ -108,42 +111,55 @@
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated completion:(void (^)(BOOL finished))completion
 {
     if (isFirstSelectedDay) {
-        self.dayLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize];
-        self.firstSelectedDayView.alpha = 0;
-        self.firstSelectedDayView.layer.transform = CATransform3DMakeScale(0.5, 0.5, 1.0);
-        [UIView animateWithDuration:0.1 animations:^{
-            self.firstSelectedDayView.alpha = 1.0;
-        }];
-        
-        CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-        bounceAnimation.delegate = self;
-        bounceAnimation.values = [NSArray arrayWithObjects:
-                                  [NSNumber numberWithFloat:0.5],
-                                  [NSNumber numberWithFloat:1.1],
-                                  [NSNumber numberWithFloat:0.8],
-                                  [NSNumber numberWithFloat:1.0], nil];
-        bounceAnimation.duration = 0.3;
-        bounceAnimation.removedOnCompletion = NO;
-        [self.firstSelectedDayView.layer addAnimation:bounceAnimation forKey:@"bounceIn"];
-        self.firstSelectedDayView.layer.transform = CATransform3DIdentity;
+        [self startFirstSelectedDayBounceInAnimation];
     } else {
-        CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-        bounceAnimation.delegate = self;
-        bounceAnimation.values = [NSArray arrayWithObjects:
-                                  [NSNumber numberWithFloat:1.1],
-                                  [NSNumber numberWithFloat:0.0], nil];
-        bounceAnimation.duration = 0.1;
-        bounceAnimation.removedOnCompletion = NO;
-        [self.firstSelectedDayView.layer addAnimation:bounceAnimation forKey:@"bounceOut"];
-        self.firstSelectedDayView.layer.transform = CATransform3DMakeScale(0.0, 0.0, 1.0);
+        [self startFirstSelectedDayBounceOutAnimation];
     }
 }
 
+#pragma mark - Animations
+- (void)startFirstSelectedDayBounceInAnimation
+{
+    CGFloat initialScaleValue = 0.5f;
+    self.dayLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize];
+    self.firstSelectedDayView.alpha = 0.0f;
+    self.firstSelectedDayView.layer.transform = CATransform3DMakeScale(initialScaleValue, initialScaleValue, 1.0f);
+    self.firstSelectedDayView.alpha = 1.0f;
+    
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+    bounceAnimation.delegate = self;
+    bounceAnimation.values = [NSArray arrayWithObjects:
+                              [NSNumber numberWithFloat:initialScaleValue],
+                              [NSNumber numberWithFloat:1.1f],
+                              [NSNumber numberWithFloat:0.8f],
+                              [NSNumber numberWithFloat:1.0f], nil];
+    bounceAnimation.duration = 0.3f;
+    bounceAnimation.removedOnCompletion = NO;
+    [self.firstSelectedDayView.layer addAnimation:bounceAnimation forKey:MNBDatePickerViewCellBounceInAnimationKey];
+}
+
+- (void)startFirstSelectedDayBounceOutAnimation
+{
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+    bounceAnimation.delegate = self;
+    bounceAnimation.values = [NSArray arrayWithObjects:
+                              [NSNumber numberWithFloat:1.1f],
+                              [NSNumber numberWithFloat:0.0f], nil];
+    bounceAnimation.duration = 0.1f;
+    bounceAnimation.removedOnCompletion = NO;
+    [self.firstSelectedDayView.layer addAnimation:bounceAnimation forKey:MNBDatePickerViewCellBounceOutAnimationKey];
+}
+
+#pragma mark - CAAnimationDelegate
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
-    if (animation == [self.firstSelectedDayView.layer animationForKey:@"bounceOut"]) {
-        self.firstSelectedDayView.alpha = 0.0;
+    if (animation == [self.firstSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceOutAnimationKey]) {
+        self.firstSelectedDayView.layer.transform = CATransform3DMakeScale(0.0f, 0.0f, 1.0f);
+        self.firstSelectedDayView.alpha = 0.0f;
         self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
+        [self.firstSelectedDayView.layer removeAllAnimations];
+    } if (animation == [self.firstSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceInAnimationKey]) {
+        self.firstSelectedDayView.layer.transform = CATransform3DIdentity;
         [self.firstSelectedDayView.layer removeAllAnimations];
     }
 }
