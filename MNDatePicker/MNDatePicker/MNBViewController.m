@@ -7,23 +7,56 @@
 //
 
 #import "MNBViewController.h"
+#import "MNBDatePickerView.h"
 
 @interface MNBViewController ()
-
+@property (nonatomic, strong) MNBDatePickerView *datePickerView;
 @end
 
 @implementation MNBViewController
 
+- (instancetype)init
+{
+    return [self initWithNibName:nil bundle:nil];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    return [self initWithNibName:nil bundle:nil];
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        [self commonInit];
+    }
+    
+    return self;
+}
+
+- (void)commonInit
+{
+    self.datePickerView = [[MNBDatePickerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 612, 340)];
+}
+
+#pragma mark - View Life Cycle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    [self.view addSubview:self.datePickerView];
 }
 
+#pragma mark - Rotation Handling
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    // Call MNBDatePickerView method to reload layout - internally self.collectionView invalidatelayout
+}
+
+#pragma mark - Memory Management
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

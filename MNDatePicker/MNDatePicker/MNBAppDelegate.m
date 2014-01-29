@@ -7,12 +7,20 @@
 //
 
 #import "MNBAppDelegate.h"
+#import "MNBViewController.h"
 
 @implementation MNBAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor whiteColor];
+    
+    
+    MNBViewController *calendarViewController = [[MNBViewController alloc] init];
+    
+    [self.window setRootViewController:calendarViewController];
+    [self.window makeKeyAndVisible];
     return YES;
 }
 							
