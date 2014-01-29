@@ -96,7 +96,8 @@
 
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay
 {
-    [self setIsFirstSelectedDay:isFirstSelectedDay animated:NO];
+    _isFirstSelectedDay = isFirstSelectedDay;
+    self.firstSelectedDayView.alpha = isFirstSelectedDay ? 1.0f : 0.0f;
 }
 
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated
@@ -106,14 +107,45 @@
 
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated completion:(void (^)(BOOL finished))completion
 {
-    self.dayLabel.font = isFirstSelectedDay ? [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize] : [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
-    [UIView animateWithDuration:animated ? 0.2f : 0.0f delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^{
-        self.firstSelectedDayView.alpha = isFirstSelectedDay ? 1.0f : 0.0f;
-    } completion:^(BOOL finished) {
-        if (completion) {
-            completion(YES);
-        }
-    }];
+    if (isFirstSelectedDay) {
+        self.dayLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize];
+        self.firstSelectedDayView.alpha = 0;
+        self.firstSelectedDayView.layer.transform = CATransform3DMakeScale(0.5, 0.5, 1.0);
+        [UIView animateWithDuration:0.1 animations:^{
+            self.firstSelectedDayView.alpha = 1.0;
+        }];
+        
+        CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+        bounceAnimation.delegate = self;
+        bounceAnimation.values = [NSArray arrayWithObjects:
+                                  [NSNumber numberWithFloat:0.5],
+                                  [NSNumber numberWithFloat:1.1],
+                                  [NSNumber numberWithFloat:0.8],
+                                  [NSNumber numberWithFloat:1.0], nil];
+        bounceAnimation.duration = 0.3;
+        bounceAnimation.removedOnCompletion = NO;
+        [self.firstSelectedDayView.layer addAnimation:bounceAnimation forKey:@"bounceIn"];
+        self.firstSelectedDayView.layer.transform = CATransform3DIdentity;
+    } else {
+        CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+        bounceAnimation.delegate = self;
+        bounceAnimation.values = [NSArray arrayWithObjects:
+                                  [NSNumber numberWithFloat:1.1],
+                                  [NSNumber numberWithFloat:0.0], nil];
+        bounceAnimation.duration = 0.1;
+        bounceAnimation.removedOnCompletion = NO;
+        [self.firstSelectedDayView.layer addAnimation:bounceAnimation forKey:@"bounceOut"];
+        self.firstSelectedDayView.layer.transform = CATransform3DMakeScale(0.0, 0.0, 1.0);
+    }
+}
+
+- (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
+{
+    if (animation == [self.firstSelectedDayView.layer animationForKey:@"bounceOut"]) {
+        self.firstSelectedDayView.alpha = 0.0;
+        self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
+        [self.firstSelectedDayView.layer removeAllAnimations];
+    }
 }
 
 @end
