@@ -66,11 +66,12 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
         
         // Attributes for items
         NSInteger itemsCount = [self.collectionView numberOfItemsInSection:section];
-        for (NSInteger item = 0; item <itemsCount; item++) {
+        for (NSInteger item = 0; item < itemsCount; item++) {
             indexPath = [NSIndexPath indexPathForItem:item inSection:section];
             
             UICollectionViewLayoutAttributes *itemAttributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
             itemAttributes.frame = [self frameForCellAtIndexPath:indexPath];
+            itemAttributes.zIndex = itemsCount - item;
             cellLayoutInfo[indexPath] = itemAttributes;
         }
     }

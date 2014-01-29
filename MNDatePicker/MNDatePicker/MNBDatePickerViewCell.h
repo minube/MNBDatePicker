@@ -10,4 +10,9 @@
 
 @interface MNBDatePickerViewCell : UICollectionViewCell
 @property (nonatomic, strong) NSString *dayNumber;
+@property (nonatomic, assign) BOOL isSelectedDay;
+@property (nonatomic, assign) BOOL isFirstSelectedDay;
+
+- (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated;
+- (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 @end
