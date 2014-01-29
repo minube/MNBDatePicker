@@ -26,6 +26,10 @@
 		45CECDA9188FC12A00939430 /* MNBDatePickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CECDA8188FC12A00939430 /* MNBDatePickerViewCell.m */; };
 		45CECDAC188FD20400939430 /* MNBDatePickerViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CECDAB188FD20400939430 /* MNBDatePickerViewHeader.m */; };
 		45CECDBB188FFDB800939430 /* MNBDatePickerCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CECDBA188FFDB800939430 /* MNBDatePickerCollectionViewLayout.m */; };
+		45EC45D018995CD0008DE767 /* leftArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45CC18995CD0008DE767 /* leftArrow.png */; };
+		45EC45D118995CD0008DE767 /* leftArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45CD18995CD0008DE767 /* leftArrow@2x.png */; };
+		45EC45D218995CD0008DE767 /* rightArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45CE18995CD0008DE767 /* rightArrow.png */; };
+		45EC45D318995CD0008DE767 /* rightArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45CF18995CD0008DE767 /* rightArrow@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +73,10 @@
 		45CECDAB188FD20400939430 /* MNBDatePickerViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerViewHeader.m; sourceTree = "<group>"; };
 		45CECDB9188FFDB800939430 /* MNBDatePickerCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerCollectionViewLayout.h; sourceTree = "<group>"; };
 		45CECDBA188FFDB800939430 /* MNBDatePickerCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerCollectionViewLayout.m; sourceTree = "<group>"; };
+		45EC45CC18995CD0008DE767 /* leftArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leftArrow.png; sourceTree = "<group>"; };
+		45EC45CD18995CD0008DE767 /* leftArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "leftArrow@2x.png"; sourceTree = "<group>"; };
+		45EC45CE18995CD0008DE767 /* rightArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightArrow.png; sourceTree = "<group>"; };
+		45EC45CF18995CD0008DE767 /* rightArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rightArrow@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +159,7 @@
 				456E62DF1896BB05002ED076 /* MNBDatePickerView.m */,
 				4590F6881897ED1500FAED4A /* MNBTriangleView.h */,
 				4590F6891897ED1500FAED4A /* MNBTriangleView.m */,
+				45EC45CB18995CD0008DE767 /* Resources */,
 				45CECD8A188FAD6800939430 /* Images.xcassets */,
 				4590F6841897C8AB00FAED4A /* Categories */,
 				45CECD79188FAD6800939430 /* Supporting Files */,
@@ -185,6 +194,17 @@
 				45CECD9A188FAD6800939430 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		45EC45CB18995CD0008DE767 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				45EC45CC18995CD0008DE767 /* leftArrow.png */,
+				45EC45CD18995CD0008DE767 /* leftArrow@2x.png */,
+				45EC45CE18995CD0008DE767 /* rightArrow.png */,
+				45EC45CF18995CD0008DE767 /* rightArrow@2x.png */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,6 +286,10 @@
 			files = (
 				45CECD8B188FAD6800939430 /* Images.xcassets in Resources */,
 				45CECD7D188FAD6800939430 /* InfoPlist.strings in Resources */,
+				45EC45D218995CD0008DE767 /* rightArrow.png in Resources */,
+				45EC45D018995CD0008DE767 /* leftArrow.png in Resources */,
+				45EC45D118995CD0008DE767 /* leftArrow@2x.png in Resources */,
+				45EC45D318995CD0008DE767 /* rightArrow@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
