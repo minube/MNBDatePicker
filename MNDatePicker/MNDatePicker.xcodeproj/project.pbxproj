@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		456E62E01896BB05002ED076 /* MNBDatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 456E62DF1896BB05002ED076 /* MNBDatePickerView.m */; };
 		4590F6871897C8AB00FAED4A /* UIColor+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590F6861897C8AB00FAED4A /* UIColor+Utils.m */; };
-		4590F68A1897ED1500FAED4A /* MNBTriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590F6891897ED1500FAED4A /* MNBTriangleView.m */; };
 		45CECD73188FAD6700939430 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CECD72188FAD6700939430 /* Foundation.framework */; };
 		45CECD75188FAD6800939430 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CECD74188FAD6800939430 /* CoreGraphics.framework */; };
 		45CECD77188FAD6800939430 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CECD76188FAD6800939430 /* UIKit.framework */; };
@@ -23,13 +21,15 @@
 		45CECD94188FAD6800939430 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CECD76188FAD6800939430 /* UIKit.framework */; };
 		45CECD9C188FAD6800939430 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45CECD9A188FAD6800939430 /* InfoPlist.strings */; };
 		45CECD9E188FAD6800939430 /* MNDatePickerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CECD9D188FAD6800939430 /* MNDatePickerTests.m */; };
-		45CECDA9188FC12A00939430 /* MNBDatePickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CECDA8188FC12A00939430 /* MNBDatePickerViewCell.m */; };
-		45CECDAC188FD20400939430 /* MNBDatePickerViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CECDAB188FD20400939430 /* MNBDatePickerViewHeader.m */; };
-		45CECDBB188FFDB800939430 /* MNBDatePickerCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CECDBA188FFDB800939430 /* MNBDatePickerCollectionViewLayout.m */; };
-		45EC45D018995CD0008DE767 /* leftArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45CC18995CD0008DE767 /* leftArrow.png */; };
-		45EC45D118995CD0008DE767 /* leftArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45CD18995CD0008DE767 /* leftArrow@2x.png */; };
-		45EC45D218995CD0008DE767 /* rightArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45CE18995CD0008DE767 /* rightArrow.png */; };
-		45EC45D318995CD0008DE767 /* rightArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45CF18995CD0008DE767 /* rightArrow@2x.png */; };
+		45EC45E418995D9D008DE767 /* MNBDatePickerCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 45EC45D618995D9D008DE767 /* MNBDatePickerCollectionViewLayout.m */; };
+		45EC45E518995D9D008DE767 /* MNBDatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45EC45D818995D9D008DE767 /* MNBDatePickerView.m */; };
+		45EC45E618995D9D008DE767 /* MNBDatePickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45EC45DA18995D9D008DE767 /* MNBDatePickerViewCell.m */; };
+		45EC45E718995D9D008DE767 /* MNBDatePickerViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45EC45DC18995D9D008DE767 /* MNBDatePickerViewHeader.m */; };
+		45EC45E818995D9D008DE767 /* MNBTriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45EC45DE18995D9D008DE767 /* MNBTriangleView.m */; };
+		45EC45E918995D9D008DE767 /* leftArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45E018995D9D008DE767 /* leftArrow.png */; };
+		45EC45EA18995D9D008DE767 /* leftArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45E118995D9D008DE767 /* leftArrow@2x.png */; };
+		45EC45EB18995D9D008DE767 /* rightArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45E218995D9D008DE767 /* rightArrow.png */; };
+		45EC45EC18995D9D008DE767 /* rightArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45EC45E318995D9D008DE767 /* rightArrow@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,12 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		456E62DE1896BB05002ED076 /* MNBDatePickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerView.h; sourceTree = "<group>"; };
-		456E62DF1896BB05002ED076 /* MNBDatePickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerView.m; sourceTree = "<group>"; };
 		4590F6851897C8AB00FAED4A /* UIColor+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Utils.h"; sourceTree = "<group>"; };
 		4590F6861897C8AB00FAED4A /* UIColor+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Utils.m"; sourceTree = "<group>"; };
-		4590F6881897ED1500FAED4A /* MNBTriangleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBTriangleView.h; sourceTree = "<group>"; };
-		4590F6891897ED1500FAED4A /* MNBTriangleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBTriangleView.m; sourceTree = "<group>"; };
 		45CECD6F188FAD6700939430 /* MNDatePicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MNDatePicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45CECD72188FAD6700939430 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		45CECD74188FAD6800939430 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -67,16 +63,20 @@
 		45CECD99188FAD6800939430 /* MNDatePickerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MNDatePickerTests-Info.plist"; sourceTree = "<group>"; };
 		45CECD9B188FAD6800939430 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		45CECD9D188FAD6800939430 /* MNDatePickerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MNDatePickerTests.m; sourceTree = "<group>"; };
-		45CECDA7188FC12A00939430 /* MNBDatePickerViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerViewCell.h; sourceTree = "<group>"; };
-		45CECDA8188FC12A00939430 /* MNBDatePickerViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerViewCell.m; sourceTree = "<group>"; };
-		45CECDAA188FD20400939430 /* MNBDatePickerViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerViewHeader.h; sourceTree = "<group>"; };
-		45CECDAB188FD20400939430 /* MNBDatePickerViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerViewHeader.m; sourceTree = "<group>"; };
-		45CECDB9188FFDB800939430 /* MNBDatePickerCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerCollectionViewLayout.h; sourceTree = "<group>"; };
-		45CECDBA188FFDB800939430 /* MNBDatePickerCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerCollectionViewLayout.m; sourceTree = "<group>"; };
-		45EC45CC18995CD0008DE767 /* leftArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leftArrow.png; sourceTree = "<group>"; };
-		45EC45CD18995CD0008DE767 /* leftArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "leftArrow@2x.png"; sourceTree = "<group>"; };
-		45EC45CE18995CD0008DE767 /* rightArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightArrow.png; sourceTree = "<group>"; };
-		45EC45CF18995CD0008DE767 /* rightArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rightArrow@2x.png"; sourceTree = "<group>"; };
+		45EC45D518995D9D008DE767 /* MNBDatePickerCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerCollectionViewLayout.h; sourceTree = "<group>"; };
+		45EC45D618995D9D008DE767 /* MNBDatePickerCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerCollectionViewLayout.m; sourceTree = "<group>"; };
+		45EC45D718995D9D008DE767 /* MNBDatePickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerView.h; sourceTree = "<group>"; };
+		45EC45D818995D9D008DE767 /* MNBDatePickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerView.m; sourceTree = "<group>"; };
+		45EC45D918995D9D008DE767 /* MNBDatePickerViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerViewCell.h; sourceTree = "<group>"; };
+		45EC45DA18995D9D008DE767 /* MNBDatePickerViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerViewCell.m; sourceTree = "<group>"; };
+		45EC45DB18995D9D008DE767 /* MNBDatePickerViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBDatePickerViewHeader.h; sourceTree = "<group>"; };
+		45EC45DC18995D9D008DE767 /* MNBDatePickerViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBDatePickerViewHeader.m; sourceTree = "<group>"; };
+		45EC45DD18995D9D008DE767 /* MNBTriangleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNBTriangleView.h; sourceTree = "<group>"; };
+		45EC45DE18995D9D008DE767 /* MNBTriangleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNBTriangleView.m; sourceTree = "<group>"; };
+		45EC45E018995D9D008DE767 /* leftArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leftArrow.png; sourceTree = "<group>"; };
+		45EC45E118995D9D008DE767 /* leftArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "leftArrow@2x.png"; sourceTree = "<group>"; };
+		45EC45E218995D9D008DE767 /* rightArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightArrow.png; sourceTree = "<group>"; };
+		45EC45E318995D9D008DE767 /* rightArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rightArrow@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,21 +145,11 @@
 		45CECD78188FAD6800939430 /* MNDatePicker */ = {
 			isa = PBXGroup;
 			children = (
+				45EC45D418995D9D008DE767 /* MNBDatesPicker */,
 				45CECD81188FAD6800939430 /* MNBAppDelegate.h */,
 				45CECD82188FAD6800939430 /* MNBAppDelegate.m */,
 				45CECD87188FAD6800939430 /* MNBViewController.h */,
 				45CECD88188FAD6800939430 /* MNBViewController.m */,
-				45CECDA7188FC12A00939430 /* MNBDatePickerViewCell.h */,
-				45CECDA8188FC12A00939430 /* MNBDatePickerViewCell.m */,
-				45CECDAA188FD20400939430 /* MNBDatePickerViewHeader.h */,
-				45CECDAB188FD20400939430 /* MNBDatePickerViewHeader.m */,
-				45CECDB9188FFDB800939430 /* MNBDatePickerCollectionViewLayout.h */,
-				45CECDBA188FFDB800939430 /* MNBDatePickerCollectionViewLayout.m */,
-				456E62DE1896BB05002ED076 /* MNBDatePickerView.h */,
-				456E62DF1896BB05002ED076 /* MNBDatePickerView.m */,
-				4590F6881897ED1500FAED4A /* MNBTriangleView.h */,
-				4590F6891897ED1500FAED4A /* MNBTriangleView.m */,
-				45EC45CB18995CD0008DE767 /* Resources */,
 				45CECD8A188FAD6800939430 /* Images.xcassets */,
 				4590F6841897C8AB00FAED4A /* Categories */,
 				45CECD79188FAD6800939430 /* Supporting Files */,
@@ -196,13 +186,31 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		45EC45CB18995CD0008DE767 /* Resources */ = {
+		45EC45D418995D9D008DE767 /* MNBDatesPicker */ = {
 			isa = PBXGroup;
 			children = (
-				45EC45CC18995CD0008DE767 /* leftArrow.png */,
-				45EC45CD18995CD0008DE767 /* leftArrow@2x.png */,
-				45EC45CE18995CD0008DE767 /* rightArrow.png */,
-				45EC45CF18995CD0008DE767 /* rightArrow@2x.png */,
+				45EC45D518995D9D008DE767 /* MNBDatePickerCollectionViewLayout.h */,
+				45EC45D618995D9D008DE767 /* MNBDatePickerCollectionViewLayout.m */,
+				45EC45D718995D9D008DE767 /* MNBDatePickerView.h */,
+				45EC45D818995D9D008DE767 /* MNBDatePickerView.m */,
+				45EC45D918995D9D008DE767 /* MNBDatePickerViewCell.h */,
+				45EC45DA18995D9D008DE767 /* MNBDatePickerViewCell.m */,
+				45EC45DB18995D9D008DE767 /* MNBDatePickerViewHeader.h */,
+				45EC45DC18995D9D008DE767 /* MNBDatePickerViewHeader.m */,
+				45EC45DD18995D9D008DE767 /* MNBTriangleView.h */,
+				45EC45DE18995D9D008DE767 /* MNBTriangleView.m */,
+				45EC45DF18995D9D008DE767 /* Resources */,
+			);
+			path = MNBDatesPicker;
+			sourceTree = "<group>";
+		};
+		45EC45DF18995D9D008DE767 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				45EC45E018995D9D008DE767 /* leftArrow.png */,
+				45EC45E118995D9D008DE767 /* leftArrow@2x.png */,
+				45EC45E218995D9D008DE767 /* rightArrow.png */,
+				45EC45E318995D9D008DE767 /* rightArrow@2x.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -286,10 +294,10 @@
 			files = (
 				45CECD8B188FAD6800939430 /* Images.xcassets in Resources */,
 				45CECD7D188FAD6800939430 /* InfoPlist.strings in Resources */,
-				45EC45D218995CD0008DE767 /* rightArrow.png in Resources */,
-				45EC45D018995CD0008DE767 /* leftArrow.png in Resources */,
-				45EC45D118995CD0008DE767 /* leftArrow@2x.png in Resources */,
-				45EC45D318995CD0008DE767 /* rightArrow@2x.png in Resources */,
+				45EC45EB18995D9D008DE767 /* rightArrow.png in Resources */,
+				45EC45E918995D9D008DE767 /* leftArrow.png in Resources */,
+				45EC45EA18995D9D008DE767 /* leftArrow@2x.png in Resources */,
+				45EC45EC18995D9D008DE767 /* rightArrow@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,14 +316,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45EC45E418995D9D008DE767 /* MNBDatePickerCollectionViewLayout.m in Sources */,
+				45EC45E718995D9D008DE767 /* MNBDatePickerViewHeader.m in Sources */,
+				45EC45E818995D9D008DE767 /* MNBTriangleView.m in Sources */,
+				45EC45E618995D9D008DE767 /* MNBDatePickerViewCell.m in Sources */,
 				45CECD89188FAD6800939430 /* MNBViewController.m in Sources */,
-				45CECDAC188FD20400939430 /* MNBDatePickerViewHeader.m in Sources */,
-				4590F68A1897ED1500FAED4A /* MNBTriangleView.m in Sources */,
-				45CECDBB188FFDB800939430 /* MNBDatePickerCollectionViewLayout.m in Sources */,
 				4590F6871897C8AB00FAED4A /* UIColor+Utils.m in Sources */,
-				456E62E01896BB05002ED076 /* MNBDatePickerView.m in Sources */,
 				45CECD83188FAD6800939430 /* MNBAppDelegate.m in Sources */,
-				45CECDA9188FC12A00939430 /* MNBDatePickerViewCell.m in Sources */,
+				45EC45E518995D9D008DE767 /* MNBDatePickerView.m in Sources */,
 				45CECD7F188FAD6800939430 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
