@@ -228,17 +228,16 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
 - (BOOL)isSelectedIndexPath:(NSIndexPath *)selectedIndexPath
 {
-    BOOL isSelected = NO;
     if (self.selectedIndexPaths) {
         for (NSIndexPath *indexPath in self.selectedIndexPaths) {
             NSComparisonResult comparisonResult = [indexPath compare:selectedIndexPath];
             if (comparisonResult == NSOrderedSame) {
-                isSelected = YES;
+                return YES;
             }
         }
     }
     
-    return isSelected;
+    return NO;
 }
 
 - (BOOL)clampAndCompareDate:(NSDate *)date withReferenceDate:(NSDate *)referenceDate
