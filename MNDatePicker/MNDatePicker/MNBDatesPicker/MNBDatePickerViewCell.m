@@ -12,9 +12,13 @@
 static NSString * const MNBDatePickerViewCellBounceInAnimationKey = @"MNBDatePickerViewCellBounceInAnimation";
 static NSString * const MNBDatePickerViewCellBounceOutAnimationKey = @"MNBDatePickerViewCellBounceOutAnimation";
 
+typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
+
 @interface MNBDatePickerViewCell ()
 @property (nonatomic, strong) UILabel *dayLabel;
 @property (nonatomic, strong) UIView *firstSelectedDayView;
+@property (nonatomic, strong) UIView *lastSelectedDayView;
+@property (nonatomic, copy) MNBDatePickerViewCellCompletionCallback completion;
 @end
 
 @implementation MNBDatePickerViewCell
@@ -32,7 +36,8 @@ static NSString * const MNBDatePickerViewCellBounceOutAnimationKey = @"MNBDatePi
 {
     [self initCell];
     [self initDayLabel];
-    [self initFirstDayView];
+    [self initFirstSelectedDayView];
+    [self initLastSelectedDayView];
 }
 
 - (void)initCell
@@ -54,14 +59,14 @@ static NSString * const MNBDatePickerViewCellBounceOutAnimationKey = @"MNBDatePi
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dayLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
 }
 
-- (void)initFirstDayView
+- (void)initFirstSelectedDayView
 {
-    self.firstSelectedDayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0.0f, self.bounds.size.width + 9.0f, self.bounds.size.height)];
+    self.firstSelectedDayView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.bounds.size.width + 9.0f, self.bounds.size.height)];
     self.firstSelectedDayView.backgroundColor = [UIColor clearColor];
     self.firstSelectedDayView.clipsToBounds = YES;
     self.firstSelectedDayView.alpha = 0.0f;
     
-    UIView *squareView = [[UIView alloc] initWithFrame:CGRectMake(0, 0.0f, self.firstSelectedDayView.bounds.size.width - 9.0f, self.firstSelectedDayView.bounds.size.height)];
+    UIView *squareView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.firstSelectedDayView.bounds.size.width - 9.0f, self.firstSelectedDayView.bounds.size.height)];
     squareView.backgroundColor = colorWithRGBA(244, 129, 0, 1.0f);
     [self.firstSelectedDayView addSubview:squareView];
     
@@ -69,6 +74,14 @@ static NSString * const MNBDatePickerViewCellBounceOutAnimationKey = @"MNBDatePi
     [self.firstSelectedDayView addSubview:triangle];
     
     [self.contentView insertSubview:self.firstSelectedDayView belowSubview:self.dayLabel];
+}
+
+- (void)initLastSelectedDayView
+{
+    self.lastSelectedDayView = [[UIView alloc] initWithFrame:self.bounds];
+    self.lastSelectedDayView.backgroundColor = colorWithRGBA(244, 129, 0, 1.0f);
+    self.lastSelectedDayView.alpha = 0.0f;
+    [self.contentView insertSubview:self.lastSelectedDayView belowSubview:self.dayLabel];
 }
 
 - (void)prepareForReuse
@@ -110,10 +123,32 @@ static NSString * const MNBDatePickerViewCellBounceOutAnimationKey = @"MNBDatePi
 
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated completion:(void (^)(BOOL finished))completion
 {
+    self.completion = completion;
     if (isFirstSelectedDay) {
         [self startFirstSelectedDayBounceInAnimation];
     } else {
         [self startFirstSelectedDayBounceOutAnimation];
+    }
+}
+
+- (void)setIsLastSelectedDay:(BOOL)isLastSelectedDay
+{
+    _isLastSelectedDay = isLastSelectedDay;
+    self.lastSelectedDayView.alpha = isLastSelectedDay ? 1.0f : 0.0f;
+}
+
+- (void)setIsLastSelectedDay:(BOOL)isLastSelectedDay animated:(BOOL)animated
+{
+    [self setIsLastSelectedDay:isLastSelectedDay animated:animated completion:nil];
+}
+
+- (void)setIsLastSelectedDay:(BOOL)isLastSelectedDay animated:(BOOL)animated completion:(void (^)(BOOL finished))completion
+{
+    self.completion = completion;
+    if (isLastSelectedDay) {
+        [self startLastSelectedDayBounceInAnimation];
+    } else {
+        [self startLastSelectedDayBounceOutAnimation];
     }
 }
 
@@ -150,6 +185,38 @@ static NSString * const MNBDatePickerViewCellBounceOutAnimationKey = @"MNBDatePi
     [self.firstSelectedDayView.layer addAnimation:bounceAnimation forKey:MNBDatePickerViewCellBounceOutAnimationKey];
 }
 
+- (void)startLastSelectedDayBounceInAnimation
+{
+    CGFloat initialScaleValue = 0.5f;
+    self.dayLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize];
+    self.lastSelectedDayView.alpha = 0.0f;
+    self.lastSelectedDayView.layer.transform = CATransform3DMakeScale(initialScaleValue, initialScaleValue, 1.0f);
+    self.lastSelectedDayView.alpha = 1.0f;
+    
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+    bounceAnimation.delegate = self;
+    bounceAnimation.values = [NSArray arrayWithObjects:
+                              [NSNumber numberWithFloat:initialScaleValue],
+                              [NSNumber numberWithFloat:1.1f],
+                              [NSNumber numberWithFloat:0.8f],
+                              [NSNumber numberWithFloat:1.0f], nil];
+    bounceAnimation.duration = 0.3f;
+    bounceAnimation.removedOnCompletion = NO;
+    [self.lastSelectedDayView.layer addAnimation:bounceAnimation forKey:MNBDatePickerViewCellBounceInAnimationKey];
+}
+
+- (void)startLastSelectedDayBounceOutAnimation
+{
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+    bounceAnimation.delegate = self;
+    bounceAnimation.values = [NSArray arrayWithObjects:
+                              [NSNumber numberWithFloat:1.1f],
+                              [NSNumber numberWithFloat:0.0f], nil];
+    bounceAnimation.duration = 0.1f;
+    bounceAnimation.removedOnCompletion = NO;
+    [self.lastSelectedDayView.layer addAnimation:bounceAnimation forKey:MNBDatePickerViewCellBounceOutAnimationKey];
+}
+
 #pragma mark - CAAnimationDelegate
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
@@ -158,9 +225,26 @@ static NSString * const MNBDatePickerViewCellBounceOutAnimationKey = @"MNBDatePi
         self.firstSelectedDayView.alpha = 0.0f;
         self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
         [self.firstSelectedDayView.layer removeAllAnimations];
-    } if (animation == [self.firstSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceInAnimationKey]) {
+    }
+    
+    if (animation == [self.firstSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceInAnimationKey]) {
         self.firstSelectedDayView.layer.transform = CATransform3DIdentity;
         [self.firstSelectedDayView.layer removeAllAnimations];
+    }
+    
+    if (animation == [self.lastSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceOutAnimationKey]) {
+        self.lastSelectedDayView.layer.transform = CATransform3DMakeScale(0.0f, 0.0f, 1.0f);
+        self.lastSelectedDayView.alpha = 0.0f;
+        self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
+        [self.lastSelectedDayView.layer removeAllAnimations];
+    }
+    
+    if (animation == [self.lastSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceInAnimationKey]) {
+        self.lastSelectedDayView.layer.transform = CATransform3DIdentity;
+        [self.lastSelectedDayView.layer removeAllAnimations];
+    }
+    if (self.completion) {
+        self.completion(flag);
     }
 }
 

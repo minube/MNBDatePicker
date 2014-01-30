@@ -12,7 +12,10 @@
 @property (nonatomic, strong) NSString *dayNumber;
 @property (nonatomic, assign) BOOL isSelectedDay;
 @property (nonatomic, assign) BOOL isFirstSelectedDay;
+@property (nonatomic, assign) BOOL isLastSelectedDay;
 
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated;
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
+- (void)setIsLastSelectedDay:(BOOL)isLastSelectedDay animated:(BOOL)animated;
+- (void)setIsLastSelectedDay:(BOOL)isLastSelectedDay animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 @end
