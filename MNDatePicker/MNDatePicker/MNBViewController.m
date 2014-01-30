@@ -37,7 +37,7 @@
 
 - (void)commonInit
 {
-    self.datePickerView = [[MNBDatePickerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 612, 340)];
+    self.datePickerView = [[MNBDatePickerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 636, 336)];
 }
 
 #pragma mark - View Life Cycle
