@@ -69,16 +69,12 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
         sectionSpace = MNBDatePickerSectionSpace;
     }
     customLayout.sectionsSpace = sectionSpace;
-    CGFloat totalAmountOfVisibleSectionSpace = (MNBDatePickerCalendarsPerView - 1) * sectionSpace;
-    CGFloat totalAmountOfVisibleCalendars = ((MNBDatePickerDefaultItemWidth * MNBDatePickerDaysPerWeek) + ((MNBDatePickerDaysPerWeek - 1) * MNBDatePickerItemsSpace)) * MNBDatePickerCalendarsPerView;
-    CGFloat collectionViewWidth = totalAmountOfVisibleCalendars + totalAmountOfVisibleSectionSpace;
-    CGFloat collectionViewHeight = MNBDatePickerHeaderHeight + (MNBDatePickerDefaultItemWidth * MNBDatePickerRowsPerMonth) + ((MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace);
-    UIView *collectionViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, collectionViewWidth, collectionViewHeight)];
+    UIView *collectionViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.bounds.size.width, self.bounds.size.height)];
     collectionViewContainer.clipsToBounds = YES;
     collectionViewContainer.backgroundColor = [UIColor clearColor];
     [self addSubview:collectionViewContainer];
     
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, collectionViewWidth + MNBDatePickerSectionSpace, collectionViewHeight) collectionViewLayout:customLayout];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.bounds.size.width + MNBDatePickerSectionSpace, self.bounds.size.height) collectionViewLayout:customLayout];
     self.collectionView.backgroundColor = colorWithRGBA(15, 20, 28, 1);
     self.collectionView.pagingEnabled = YES;
     self.collectionView.delegate = self;
@@ -194,9 +190,12 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 #pragma mark - MNBDatePickerCollectionViewLayoutDelegate
 - (CGSize)sizeForItemsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)layout
 {
-    //    CGFloat totalItemsSpace = (MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace;
-    //    CGFloat itemHeight = floorf((CGRectGetHeight(self.collectionView.bounds) - MNBDatePickerHeaderHeight - totalItemsSpace) / MNBDatePickerRowsPerMonth);
-    return CGSizeMake(MNBDatePickerDefaultItemWidth, MNBDatePickerDefaultItemWidth);
+    CGFloat totalAmountOfSectionsSpace = (MNBDatePickerCalendarsPerView - 1) * MNBDatePickerSectionSpace;
+    CGFloat totalAmountOfItemsSpace = (MNBDatePickerDaysPerWeek - 1) * MNBDatePickerItemsSpace * MNBDatePickerCalendarsPerView;
+    CGFloat itemWidth = (self.bounds.size.width - totalAmountOfSectionsSpace - totalAmountOfItemsSpace) / (MNBDatePickerDaysPerWeek * MNBDatePickerCalendarsPerView);
+    CGFloat totalVerticalItemsSpace = (MNBDatePickerRowsPerMonth - 1) * MNBDatePickerItemsSpace;
+    CGFloat itemHeight = (self.bounds.size.height - MNBDatePickerHeaderHeight - totalVerticalItemsSpace) / MNBDatePickerRowsPerMonth;
+    return CGSizeMake(itemWidth, itemHeight);
 }
 
 #pragma mark - UIScrollViewDelegate
