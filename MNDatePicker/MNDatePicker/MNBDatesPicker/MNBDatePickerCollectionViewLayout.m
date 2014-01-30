@@ -144,8 +144,8 @@ static const NSUInteger MNBDatePickerCollectionViewLayoutDefaultNumberOfColumns 
             xOffset += [self widthForSection:section] + self.sectionsSpace;
         }
     }
-    CGFloat originX = floorf((self.itemSize.width + self.itemsSpace) * column) + xOffset;
-    CGFloat originY = floorf((self.itemSize.height + self.itemsSpace) * row) + self.headerHeight;
+    CGFloat originX = ((self.itemSize.width + self.itemsSpace) * column) + xOffset;
+    CGFloat originY = ((self.itemSize.height + self.itemsSpace) * row) + self.headerHeight;
     
     return CGRectMake(originX, originY, self.itemSize.width, self.itemSize.height);
 }
