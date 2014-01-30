@@ -61,16 +61,16 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 
 - (void)initFirstSelectedDayView
 {
-    self.firstSelectedDayView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.bounds.size.width + 9.0f, self.bounds.size.height)];
+    self.firstSelectedDayView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.bounds.size.width + 11.0f, self.bounds.size.height)];
     self.firstSelectedDayView.backgroundColor = [UIColor clearColor];
     self.firstSelectedDayView.clipsToBounds = YES;
     self.firstSelectedDayView.alpha = 0.0f;
     
-    UIView *squareView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.firstSelectedDayView.bounds.size.width - 9.0f, self.firstSelectedDayView.bounds.size.height)];
+    UIView *squareView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.firstSelectedDayView.bounds.size.width - 11.0f, self.firstSelectedDayView.bounds.size.height)];
     squareView.backgroundColor = colorWithRGBA(244, 129, 0, 1.0f);
     [self.firstSelectedDayView addSubview:squareView];
     
-    MNBTriangleView *triangle = [[MNBTriangleView alloc] initWithFrame:CGRectMake(self.firstSelectedDayView.bounds.size.width - 9.0f, 0.0f, 9.0f, self.firstSelectedDayView.bounds.size.height) color:colorWithRGBA(244, 129, 0, 1.0f)];
+    MNBTriangleView *triangle = [[MNBTriangleView alloc] initWithFrame:CGRectMake(self.firstSelectedDayView.bounds.size.width - 11.0f, 0.0f, 11.0f, self.firstSelectedDayView.bounds.size.height) color:colorWithRGBA(244, 129, 0, 1.0f)];
     [self.firstSelectedDayView addSubview:triangle];
     
     [self.contentView insertSubview:self.firstSelectedDayView belowSubview:self.dayLabel];

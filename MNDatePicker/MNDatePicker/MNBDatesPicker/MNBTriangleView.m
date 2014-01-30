@@ -48,7 +48,7 @@
     
     CGContextBeginPath(ctx);
     CGContextMoveToPoint   (ctx, CGRectGetMinX(rect), CGRectGetMinY(rect));  // top left
-    CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMidY(rect));  // mid right
+    CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect) - 2.0, CGRectGetMidY(rect));  // mid right
     CGContextAddLineToPoint(ctx, CGRectGetMinX(rect), CGRectGetMaxY(rect));  // bottom left
     CGContextClosePath(ctx);
     
@@ -59,6 +59,10 @@
     CGFloat alpha = components[3];
     
     CGContextSetRGBFillColor(ctx, red, green, blue, alpha);
+    
+    
+    UIColor * shadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0];
+    CGContextSetShadowWithColor(ctx, CGSizeMake(0, 2), 3.0, shadowColor.CGColor);
     CGContextFillPath(ctx);
 }
 
