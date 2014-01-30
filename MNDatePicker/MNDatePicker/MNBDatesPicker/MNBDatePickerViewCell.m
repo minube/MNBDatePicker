@@ -112,8 +112,10 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay
 {
-    _isFirstSelectedDay = isFirstSelectedDay;
-    self.firstSelectedDayView.alpha = isFirstSelectedDay ? 1.0f : 0.0f;
+    if (_isFirstSelectedDay != isFirstSelectedDay) {
+        _isFirstSelectedDay = isFirstSelectedDay;
+        self.firstSelectedDayView.alpha = isFirstSelectedDay ? 1.0f : 0.0f;
+    }
 }
 
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated
@@ -133,8 +135,10 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 
 - (void)setIsLastSelectedDay:(BOOL)isLastSelectedDay
 {
-    _isLastSelectedDay = isLastSelectedDay;
-    self.lastSelectedDayView.alpha = isLastSelectedDay ? 1.0f : 0.0f;
+    if (_isLastSelectedDay != isLastSelectedDay) {
+        _isLastSelectedDay = isLastSelectedDay;
+        self.lastSelectedDayView.alpha = isLastSelectedDay ? 1.0f : 0.0f;
+    }
 }
 
 - (void)setIsLastSelectedDay:(BOOL)isLastSelectedDay animated:(BOOL)animated
