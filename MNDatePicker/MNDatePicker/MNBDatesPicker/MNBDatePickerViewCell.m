@@ -115,6 +115,7 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
     if (_isFirstSelectedDay != isFirstSelectedDay) {
         _isFirstSelectedDay = isFirstSelectedDay;
         self.firstSelectedDayView.alpha = isFirstSelectedDay ? 1.0f : 0.0f;
+        self.dayLabel.font = isFirstSelectedDay ? [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize] : [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
     }
 }
 
@@ -138,6 +139,7 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
     if (_isLastSelectedDay != isLastSelectedDay) {
         _isLastSelectedDay = isLastSelectedDay;
         self.lastSelectedDayView.alpha = isLastSelectedDay ? 1.0f : 0.0f;
+        self.dayLabel.font = isLastSelectedDay ? [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize] : [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
     }
 }
 
@@ -161,8 +163,6 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 {
     CGFloat initialScaleValue = 0.5f;
     self.dayLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize];
-    self.firstSelectedDayView.alpha = 0.0f;
-    self.firstSelectedDayView.layer.transform = CATransform3DMakeScale(initialScaleValue, initialScaleValue, 1.0f);
     self.firstSelectedDayView.alpha = 1.0f;
     
     CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
@@ -193,8 +193,6 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 {
     CGFloat initialScaleValue = 0.5f;
     self.dayLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize];
-    self.lastSelectedDayView.alpha = 0.0f;
-    self.lastSelectedDayView.layer.transform = CATransform3DMakeScale(initialScaleValue, initialScaleValue, 1.0f);
     self.lastSelectedDayView.alpha = 1.0f;
     
     CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
