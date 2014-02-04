@@ -366,9 +366,6 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 {
     if (_selectedDate != selectedDate) {
         _selectedDate = selectedDate;
-        NSArray *newSelectedIndexPaths = nil;
-        NSArray *selectedIndexPaths = nil;
-        
         if (!self.firstSelectedDate) {
             self.firstSelectedDate = _selectedDate;
             MNBDatePickerViewCell *cell = [self cellForItemAtDate:self.firstSelectedDate];
@@ -382,11 +379,20 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
                 case NSOrderedSame: // selected = firstdate
                 {
                     MNBDatePickerViewCell *cellFirstDate = [self cellForItemAtDate:self.firstSelectedDate];
-                    [cellFirstDate setIsFirstSelectedDay:NO animated:YES];
-                    MNBDatePickerViewCell *cellLastDate = [self cellForItemAtDate:self.lastSelectedDate];
-                    [cellLastDate setIsLastSelectedDay:NO animated:YES];
-                    self.firstSelectedDate = nil;
-                    self.lastSelectedDate = nil;
+                    [cellFirstDate setIsFirstSelectedDay:NO animated:YES completion:^(BOOL finished) {
+                        if (self.lastSelectedDate) {
+                            MNBDatePickerViewCell *cellLastDate = [self cellForItemAtDate:self.lastSelectedDate];
+                            [cellLastDate setIsLastSelectedDay:NO animated:YES completion:^(BOOL finished) {
+                                self.firstSelectedDate = nil;
+                                self.lastSelectedDate = nil;
+                                [self.collectionView reloadData];
+                            }];
+                        } else {
+                            self.firstSelectedDate = nil;
+                            self.lastSelectedDate = nil;
+                            [self.collectionView reloadData];
+                        }
+                    }];
                     if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidCancelSelection)]) {
                         [self.delegate mnbDatePickerDidCancelSelection];
                     }
@@ -394,13 +400,12 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
                     break;
                 case NSOrderedDescending: // selected < firstdate
                     if (self.lastSelectedDate) {
-                        selectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:[self addDays:1 toDate:self.firstSelectedDate] lastDate:[self addDays:-1 toDate:self.lastSelectedDate]];
                         MNBDatePickerViewCell *cellFirstDate = [self cellForItemAtDate:self.firstSelectedDate];
-                        [cellFirstDate setIsFirstSelectedDay:NO animated:YES];
-                        MNBDatePickerViewCell *cellLastDate = [self cellForItemAtDate:self.lastSelectedDate];
-                        [cellLastDate setIsLastSelectedDay:NO animated:YES];
-                        self.firstSelectedDate = nil;
-                        self.lastSelectedDate = nil;
+                        [cellFirstDate setIsFirstSelectedDay:NO animated:YES completion:^(BOOL finished) {
+                            self.firstSelectedDate = nil;
+                            self.lastSelectedDate = nil;
+                            [self.collectionView reloadData];
+                        }];
                     } else {
                         MNBDatePickerViewCell *cell = [self cellForItemAtDate:self.firstSelectedDate];
                         [cell setIsFirstSelectedDay:NO animated:YES];
@@ -411,44 +416,14 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
                     }
                     break;
                 case NSOrderedAscending: // selected > firstdate
-                    if (self.lastSelectedDate) {
-                        if ([self.lastSelectedDate compare:_selectedDate] == NSOrderedAscending) {
-                            MNBDatePickerViewCell *cellLastDate = [self cellForItemAtDate:self.lastSelectedDate];
-                            [cellLastDate setIsLastSelectedDay:NO animated:YES];
-                            self.lastSelectedDate = _selectedDate;
-                            MNBDatePickerViewCell *cellFirstDate = [self cellForItemAtDate:self.lastSelectedDate];
-                            [cellFirstDate setIsLastSelectedDay:YES animated:YES completion:^(BOOL finished) {
-                                
-                            }];
-                            newSelectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:[self addDays:1 toDate:self.firstSelectedDate] lastDate:[self addDays:-1 toDate:self.lastSelectedDate]];
-                            selectedIndexPaths = newSelectedIndexPaths;
-                        } else if ([self.lastSelectedDate compare:_selectedDate] == NSOrderedDescending) {
-                            MNBDatePickerViewCell *cellLastDate = [self cellForItemAtDate:self.lastSelectedDate];
-                            [cellLastDate setIsLastSelectedDay:NO animated:YES];
-                            self.lastSelectedDate = _selectedDate;
-                            newSelectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:[self addDays:1 toDate:self.firstSelectedDate] lastDate:self.lastSelectedDate];
-                            selectedIndexPaths = newSelectedIndexPaths;
-                        }
-                    } else {
-                        self.lastSelectedDate = _selectedDate;
-                        MNBDatePickerViewCell *cellFirstDate = [self cellForItemAtDate:self.lastSelectedDate];
-                        [cellFirstDate setIsLastSelectedDay:YES animated:YES completion:^(BOOL finished) {
-                            
-                        }];
-                        newSelectedIndexPaths = [self selectedIndexPathsBetweenFirstDate:[self addDays:1 toDate:self.firstSelectedDate] lastDate:[self addDays:-1 toDate:self.lastSelectedDate]];
-                        selectedIndexPaths = newSelectedIndexPaths;
-                    }
-                    
+                    self.lastSelectedDate = _selectedDate;
+                    [self.collectionView reloadData];
                     if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelection)]) {
                         [self.delegate mnbDatePickerDidChangeSelection];
                     }
                     break;
             }
         }
-        
-        NSArray *indexPathsToReload = [self indexPathToReloadForOldIndexPaths:self.selectedIndexPaths newIndexPaths:selectedIndexPaths];
-        self.selectedIndexPaths = newSelectedIndexPaths;
-        [self.collectionView reloadItemsAtIndexPaths:indexPathsToReload];
     }
 }
 
