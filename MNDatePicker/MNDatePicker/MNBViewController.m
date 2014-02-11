@@ -45,6 +45,9 @@
 {
     [super viewDidLoad];
     [self.view addSubview:self.datePickerView];
+    
+    self.datePickerView.firstPreSelectedDate = [NSDate date];
+    self.datePickerView.lastPreSelectedDate = [NSDate dateWithTimeInterval:5 * 24 * 60 * 60 sinceDate:[NSDate date]];
 }
 
 #pragma mark - Rotation Handling
