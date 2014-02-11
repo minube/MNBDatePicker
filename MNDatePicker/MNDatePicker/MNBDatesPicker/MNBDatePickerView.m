@@ -27,9 +27,9 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 @property (nonatomic, strong) NSDateFormatter *weekDaysFormatter;
 @property (nonatomic, assign) NSInteger currentSection;
 @property (nonatomic, strong) NSDate *selectedDate;
+@property (nonatomic ,strong) NSArray *selectedIndexPaths;
 @property (nonatomic, strong) NSDate *firstSelectedDate;
 @property (nonatomic, strong) NSDate *lastSelectedDate;
-@property (nonatomic ,strong) NSArray *selectedIndexPaths;
 @end
 
 @implementation MNBDatePickerView
@@ -363,8 +363,8 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
             self.firstSelectedDate = _selectedDate;
             MNBDatePickerViewCell *cell = [self cellForItemAtDate:self.firstSelectedDate];
             [cell setIsFirstSelectedDay:YES animated:YES];
-            if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelection)]) {
-                [self.delegate mnbDatePickerDidChangeSelection];
+            if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelectionWithFirstSelectedDate:lastSelectedDate:)]) {
+                [self.delegate mnbDatePickerDidChangeSelectionWithFirstSelectedDate:self.firstSelectedDate lastSelectedDate:self.lastSelectedDate];
             }
         } else {
             NSComparisonResult comparison = [self.firstSelectedDate compare:_selectedDate];
@@ -408,8 +408,8 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
                 case NSOrderedAscending: // selected > firstdate
                     self.lastSelectedDate = _selectedDate;
                     [self.collectionView reloadData];
-                    if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelection)]) {
-                        [self.delegate mnbDatePickerDidChangeSelection];
+                    if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelectionWithFirstSelectedDate:lastSelectedDate:)]) {
+                        [self.delegate mnbDatePickerDidChangeSelectionWithFirstSelectedDate:self.firstSelectedDate lastSelectedDate:self.lastSelectedDate];
                     }
                     break;
             }
@@ -417,17 +417,30 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     }
 }
 
+- (void)setFirstPreSelectedDate:(NSDate *)firstPreSelectedDate
+{
+    firstPreSelectedDate = [self clampDate:firstPreSelectedDate toComponents:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit)];
+    if (!_firstPreSelectedDate || [_firstPreSelectedDate compare:firstPreSelectedDate] != NSOrderedSame) {
+        _firstPreSelectedDate = firstPreSelectedDate;
+        self.firstSelectedDate = _firstPreSelectedDate;
+        [self.collectionView reloadData];
+    }
+}
+
+- (void)setLastPreSelectedDate:(NSDate *)lastPreSelectedDate
+{
+    lastPreSelectedDate = [self clampDate:lastPreSelectedDate toComponents:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit)];
+    if (!_lastPreSelectedDate || [_lastPreSelectedDate compare:lastPreSelectedDate] != NSOrderedSame) {
+        _lastPreSelectedDate = lastPreSelectedDate;
+        // Protection against invalid last choosen dates
+        if (self.firstSelectedDate && [self.firstSelectedDate compare:_lastPreSelectedDate] == NSOrderedAscending) {
+            self.lastSelectedDate = _lastPreSelectedDate;
+            [self.collectionView reloadData];
+        }
+    }
+}
+
 #pragma mark - Getters
-- (NSDate *)firstChoosenDate
-{
-    return self.firstSelectedDate;
-}
-
-- (NSDate *)lastChoosenDate
-{
-    return self.lastSelectedDate;
-}
-
 - (NSDateFormatter *)headerDateFormatter
 {
     if (!_headerDateFormatter) {
