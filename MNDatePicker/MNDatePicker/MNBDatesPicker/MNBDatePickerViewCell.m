@@ -177,10 +177,11 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 #pragma mark - Animations
 - (void)startFirstSelectedDayBounceInAnimation
 {
-    CGFloat initialScaleValue = 0.5f;
     self.dayLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize];
     self.firstSelectedDayView.alpha = 1.0f;
+    self.firstSelectedDayView.transform = CGAffineTransformIdentity;
     
+    CGFloat initialScaleValue = 0.5f;
     CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
     bounceAnimation.delegate = self;
     bounceAnimation.values = [NSArray arrayWithObjects:
@@ -195,6 +196,7 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 
 - (void)startFirstSelectedDayBounceOutAnimation
 {
+    self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
     self.firstSelectedDayView.transform = CGAffineTransformMakeScale(0.0, 0.0);
     
     CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
@@ -209,10 +211,11 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 
 - (void)startLastSelectedDayBounceInAnimation
 {
-    CGFloat initialScaleValue = 0.5f;
     self.dayLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:self.dayLabel.font.pointSize];
     self.lastSelectedDayView.alpha = 1.0f;
+    self.lastSelectedDayView.transform = CGAffineTransformIdentity;
     
+    CGFloat initialScaleValue = 0.5f;
     CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
     bounceAnimation.delegate = self;
     bounceAnimation.values = [NSArray arrayWithObjects:
@@ -227,10 +230,13 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 
 - (void)startLastSelectedDayBounceOutAnimation
 {
+    self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
+    self.lastSelectedDayView.transform = CGAffineTransformMakeScale(0.0, 0.0);
+    
     CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
     bounceAnimation.delegate = self;
     bounceAnimation.values = [NSArray arrayWithObjects:
-                              [NSNumber numberWithFloat:1.1f],
+                              [NSNumber numberWithFloat:1.0f],
                               [NSNumber numberWithFloat:0.0f], nil];
     bounceAnimation.duration = 0.1f;
     bounceAnimation.removedOnCompletion = NO;
@@ -241,27 +247,21 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
     if (animation == [self.firstSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceOutAnimationKey]) {
-        self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
         [self.firstSelectedDayView.layer removeAllAnimations];
         self.isFirstSelectedDay = NO;
     }
     
     if (animation == [self.firstSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceInAnimationKey]) {
-        self.firstSelectedDayView.layer.transform = CATransform3DIdentity;
         [self.firstSelectedDayView.layer removeAllAnimations];
         self.isFirstSelectedDay = YES;
     }
     
     if (animation == [self.lastSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceOutAnimationKey]) {
-        self.lastSelectedDayView.layer.transform = CATransform3DMakeScale(0.0f, 0.0f, 1.0f);
-        self.lastSelectedDayView.alpha = 0.0f;
-        self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
         [self.lastSelectedDayView.layer removeAllAnimations];
         self.isLastSelectedDay = NO;
     }
     
     if (animation == [self.lastSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceInAnimationKey]) {
-        self.lastSelectedDayView.layer.transform = CATransform3DIdentity;
         [self.lastSelectedDayView.layer removeAllAnimations];
         self.isLastSelectedDay = YES;
     }
