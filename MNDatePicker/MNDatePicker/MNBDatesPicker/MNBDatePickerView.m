@@ -54,11 +54,11 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     _showDaysOnlyBelongsToMonth = YES;
     _currentSection = 0;
     
-    [self initCollectionView];
-    [self initArrows];
+    [self setUpCollectionView];
+    [self setUpArrows];
 }
 
-- (void)initCollectionView
+- (void)setUpCollectionView
 {
     MNBDatePickerCollectionViewLayout *customLayout = [[MNBDatePickerCollectionViewLayout alloc] init];
     customLayout.delegate = self;
@@ -85,7 +85,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     [collectionViewContainer addSubview:self.collectionView];
 }
 
-- (void)initArrows
+- (void)setUpArrows
 {
     UIButton *nextButton = [[UIButton alloc] init];
     [nextButton setImage:[UIImage imageNamed:@"rightArrow"] forState:UIControlStateNormal];
@@ -174,6 +174,9 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     BOOL isSelected = NO;
     BOOL isFirstSelectedDate = NO;
     BOOL isLastSelectedDate = NO;
+    NSLog(@"Cell date: %@", cellDate);
+    NSLog(@"First Selected date: %@", self.firstSelectedDate);
+    NSLog(@"Last selected date: %@", self.lastSelectedDate);
     if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
         cellTitleString = [NSString stringWithFormat:@"%@", @(cellDateComponents.day)];
         if (self.firstSelectedDate && self.lastSelectedDate && [self.firstSelectedDate compare:cellDate] == NSOrderedAscending && [self.lastSelectedDate compare:cellDate] == NSOrderedDescending) {
@@ -418,12 +421,12 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 }
 
 #pragma mark - Getters
-- (NSDate *)initialSelectedDate
+- (NSDate *)firstChoosenDate
 {
     return self.firstSelectedDate;
 }
 
-- (NSDate *)finalSelectedDate
+- (NSDate *)lastChoosenDate
 {
     return self.lastSelectedDate;
 }

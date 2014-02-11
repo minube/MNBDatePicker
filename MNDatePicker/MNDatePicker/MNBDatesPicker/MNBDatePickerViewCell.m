@@ -34,18 +34,18 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 
 - (void)commonInit
 {
-    [self initCell];
-    [self initDayLabel];
-    [self initFirstSelectedDayView];
-    [self initLastSelectedDayView];
+    [self setUpCell];
+    [self setUpDayLabel];
+    [self setUpFirstSelectedDayView];
+    [self setUpLastSelectedDayView];
 }
 
-- (void)initCell
+- (void)setUpCell
 {
     self.backgroundColor = colorWithRGBA(39, 44, 51, 1.0f);
 }
 
-- (void)initDayLabel
+- (void)setUpDayLabel
 {
     _dayLabel = [[UILabel alloc] init];
     self.dayLabel.textAlignment = NSTextAlignmentCenter;
@@ -59,7 +59,7 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dayLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
 }
 
-- (void)initFirstSelectedDayView
+- (void)setUpFirstSelectedDayView
 {
     self.firstSelectedDayView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.bounds.size.width + 11.0f, self.bounds.size.height)];
     self.firstSelectedDayView.backgroundColor = [UIColor clearColor];
@@ -76,7 +76,7 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
     [self.contentView insertSubview:self.firstSelectedDayView belowSubview:self.dayLabel];
 }
 
-- (void)initLastSelectedDayView
+- (void)setUpLastSelectedDayView
 {
     self.lastSelectedDayView = [[UIView alloc] initWithFrame:self.bounds];
     self.lastSelectedDayView.backgroundColor = colorWithRGBA(244, 129, 0, 1.0f);
@@ -128,9 +128,17 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 {
     self.completion = completion;
     if (isFirstSelectedDay) {
-        [self startFirstSelectedDayBounceInAnimation];
+        if (animated) {
+            [self startFirstSelectedDayBounceInAnimation];
+        } else {
+            self.isFirstSelectedDay = YES;
+        }
     } else {
-        [self startFirstSelectedDayBounceOutAnimation];
+        if (animated) {
+            [self startFirstSelectedDayBounceOutAnimation];
+        } else {
+            self.isFirstSelectedDay = NO;
+        }
     }
 }
 
@@ -152,9 +160,17 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 {
     self.completion = completion;
     if (isLastSelectedDay) {
-        [self startLastSelectedDayBounceInAnimation];
+        if (animated) {
+            [self startLastSelectedDayBounceInAnimation];
+        } else {
+            self.isLastSelectedDay = YES;
+        }
     } else {
-        [self startLastSelectedDayBounceOutAnimation];
+        if (animated) {
+            [self startLastSelectedDayBounceOutAnimation];
+        } else {
+            self.isLastSelectedDay = NO;
+        }
     }
 }
 
@@ -227,11 +243,13 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
         self.firstSelectedDayView.alpha = 0.0f;
         self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
         [self.firstSelectedDayView.layer removeAllAnimations];
+        self.isFirstSelectedDay = NO;
     }
     
     if (animation == [self.firstSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceInAnimationKey]) {
         self.firstSelectedDayView.layer.transform = CATransform3DIdentity;
         [self.firstSelectedDayView.layer removeAllAnimations];
+        self.isFirstSelectedDay = YES;
     }
     
     if (animation == [self.lastSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceOutAnimationKey]) {
@@ -239,11 +257,13 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
         self.lastSelectedDayView.alpha = 0.0f;
         self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
         [self.lastSelectedDayView.layer removeAllAnimations];
+        self.isLastSelectedDay = NO;
     }
     
     if (animation == [self.lastSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceInAnimationKey]) {
         self.lastSelectedDayView.layer.transform = CATransform3DIdentity;
         [self.lastSelectedDayView.layer removeAllAnimations];
+        self.isLastSelectedDay = YES;
     }
     if (self.completion) {
         self.completion(flag);
