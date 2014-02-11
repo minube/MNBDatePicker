@@ -195,10 +195,12 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 
 - (void)startFirstSelectedDayBounceOutAnimation
 {
+    self.firstSelectedDayView.transform = CGAffineTransformMakeScale(0.0, 0.0);
+    
     CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
     bounceAnimation.delegate = self;
     bounceAnimation.values = [NSArray arrayWithObjects:
-                              [NSNumber numberWithFloat:1.1f],
+                              [NSNumber numberWithFloat:1.0f],
                               [NSNumber numberWithFloat:0.0f], nil];
     bounceAnimation.duration = 0.1f;
     bounceAnimation.removedOnCompletion = NO;
@@ -239,8 +241,6 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
     if (animation == [self.firstSelectedDayView.layer animationForKey:MNBDatePickerViewCellBounceOutAnimationKey]) {
-        self.firstSelectedDayView.layer.transform = CATransform3DMakeScale(0.0f, 0.0f, 1.0f);
-        self.firstSelectedDayView.alpha = 0.0f;
         self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:self.dayLabel.font.pointSize];
         [self.firstSelectedDayView.layer removeAllAnimations];
         self.isFirstSelectedDay = NO;
