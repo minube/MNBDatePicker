@@ -174,7 +174,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     BOOL isSelected = NO;
     BOOL isFirstSelectedDate = NO;
     BOOL isLastSelectedDate = NO;
-    if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
+    if (((cellDateComponents.month == firstDayOfMonthComponents.month) && [cellDate compare:self.firstDate] != NSOrderedAscending) || !self.showDaysOnlyBelongsToMonth) {
         cellTitleString = [NSString stringWithFormat:@"%@", @(cellDateComponents.day)];
         if (self.firstSelectedDate && self.lastSelectedDate && [self.firstSelectedDate compare:cellDate] == NSOrderedAscending && [self.lastSelectedDate compare:cellDate] == NSOrderedDescending) {
             isSelected = YES;
