@@ -30,6 +30,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 @property (nonatomic ,strong) NSArray *selectedIndexPaths;
 @property (nonatomic, strong) NSDate *firstSelectedDate;
 @property (nonatomic, strong) NSDate *lastSelectedDate;
+@property (nonatomic, strong) NSDate *today;
 @end
 
 @implementation MNBDatePickerView
@@ -128,6 +129,10 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     NSDateComponents *cellDateComponents = [self.calendar components:NSDayCalendarUnit | NSMonthCalendarUnit fromDate:cellDate];
     NSDateComponents *firstDayOfMonthComponents = [self.calendar components:NSMonthCalendarUnit fromDate:firstDayOfMonth];
     
+    if ([cellDate compare:self.today] == NSOrderedAscending) {
+        return NO;
+    }
+    
     if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
         return YES;
     }
@@ -174,21 +179,32 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     BOOL isSelected = NO;
     BOOL isFirstSelectedDate = NO;
     BOOL isLastSelectedDate = NO;
-    if (((cellDateComponents.month == firstDayOfMonthComponents.month) && [cellDate compare:self.firstDate] != NSOrderedAscending) || !self.showDaysOnlyBelongsToMonth) {
+    BOOL isDisableDate = NO;
+    
+    if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
         cellTitleString = [NSString stringWithFormat:@"%@", @(cellDateComponents.day)];
-        if (self.firstSelectedDate && self.lastSelectedDate && [self.firstSelectedDate compare:cellDate] == NSOrderedAscending && [self.lastSelectedDate compare:cellDate] == NSOrderedDescending) {
-            isSelected = YES;
+        
+        if ([cellDate compare:self.today] == NSOrderedAscending) {
+            isDisableDate = YES;
         }
-        if (self.firstSelectedDate && [self.firstSelectedDate compare:cellDate] == NSOrderedSame) {
-            isFirstSelectedDate = YES;
-        } else if (self.lastSelectedDate && [self.lastSelectedDate compare:cellDate] == NSOrderedSame) {
-            isLastSelectedDate = YES;
+        
+        if (!isDisableDate) {
+            if (self.firstSelectedDate && self.lastSelectedDate && [self.firstSelectedDate compare:cellDate] == NSOrderedAscending && [self.lastSelectedDate compare:cellDate] == NSOrderedDescending) {
+                isSelected = YES;
+            }
+            if (self.firstSelectedDate && [self.firstSelectedDate compare:cellDate] == NSOrderedSame) {
+                isFirstSelectedDate = YES;
+            } else if (self.lastSelectedDate && [self.lastSelectedDate compare:cellDate] == NSOrderedSame) {
+                isLastSelectedDate = YES;
+            }
         }
     }
+    
     cell.dayNumber = cellTitleString;
     cell.isFirstSelectedDay = isFirstSelectedDate;
     cell.isSelectedDay = isSelected;
     cell.isLastSelectedDay = isLastSelectedDate;
+    cell.isDisableDay = isDisableDate;
     return cell;
 }
 
@@ -510,6 +526,14 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
         [self setLastDate:[self.calendar dateByAddingComponents:offsetComponents toDate:self.firstDate options:0]];
     }
     return _lastDate;
+}
+
+- (NSDate *)today
+{
+    if (!_today) {
+        _today = [self.calendar dateFromComponents:[self.calendar components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:[NSDate date]]];
+    }
+    return _today;
 }
 
 @end

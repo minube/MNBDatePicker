@@ -13,6 +13,7 @@
 @property (nonatomic, assign) BOOL isSelectedDay;
 @property (nonatomic, assign) BOOL isFirstSelectedDay;
 @property (nonatomic, assign) BOOL isLastSelectedDay;
+@property (nonatomic, assign) BOOL isDisableDay;
 
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated;
 - (void)setIsFirstSelectedDay:(BOOL)isFirstSelectedDay animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;

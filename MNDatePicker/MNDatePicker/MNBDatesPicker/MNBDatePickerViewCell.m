@@ -105,6 +105,14 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
     }
 }
 
+- (void)setIsDisableDay:(BOOL)isDisableDay
+{
+    if (_isDisableDay != isDisableDay) {
+        _isDisableDay = isDisableDay;
+        self.dayLabel.textColor = _isDisableDay ? colorWithRGBA(255, 255, 255, 0.2) : colorWithRGB(255, 255, 255);
+    }
+}
+
 - (void)setDayNumber:(NSString *)dayNumber
 {
     self.dayLabel.text = dayNumber;
