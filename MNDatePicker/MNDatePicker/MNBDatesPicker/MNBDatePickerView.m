@@ -419,24 +419,47 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
 - (void)setFirstPreSelectedDate:(NSDate *)firstPreSelectedDate
 {
-    firstPreSelectedDate = [self clampDate:firstPreSelectedDate toComponents:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit)];
-    if (!_firstPreSelectedDate || [_firstPreSelectedDate compare:firstPreSelectedDate] != NSOrderedSame) {
+    if (firstPreSelectedDate) {
+        firstPreSelectedDate = [self clampDate:firstPreSelectedDate toComponents:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit)];
         _firstPreSelectedDate = firstPreSelectedDate;
-        self.firstSelectedDate = _firstPreSelectedDate;
+        if (self.firstSelectedDate && [_firstPreSelectedDate compare:self.firstSelectedDate] != NSOrderedSame) {
+            self.firstSelectedDate = _firstPreSelectedDate;
+            if ([self.firstSelectedDate compare:self.lastSelectedDate] != NSOrderedAscending) {
+                self.lastSelectedDate = nil;
+            }
+            [self.collectionView reloadData];
+        } else if (!self.firstSelectedDate) {
+            self.firstSelectedDate = _firstPreSelectedDate;
+            [self.collectionView reloadData];
+        }
+    } else {
+        _firstPreSelectedDate = nil;
+        _lastPreSelectedDate = nil;
+        self.firstSelectedDate = nil;
+        self.lastSelectedDate = nil;
         [self.collectionView reloadData];
     }
 }
 
 - (void)setLastPreSelectedDate:(NSDate *)lastPreSelectedDate
 {
-    lastPreSelectedDate = [self clampDate:lastPreSelectedDate toComponents:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit)];
-    if (!_lastPreSelectedDate || [_lastPreSelectedDate compare:lastPreSelectedDate] != NSOrderedSame) {
+    if (lastPreSelectedDate) {
+        lastPreSelectedDate = [self clampDate:lastPreSelectedDate toComponents:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit)];
         _lastPreSelectedDate = lastPreSelectedDate;
-        // Protection against invalid last choosen dates
-        if (self.firstSelectedDate && [self.firstSelectedDate compare:_lastPreSelectedDate] == NSOrderedAscending) {
+        if (self.lastSelectedDate &&  [_lastPreSelectedDate compare:self.lastSelectedDate] != NSOrderedSame) {
+            // Protection against invalid last choosen dates
+            if (self.firstSelectedDate && [self.firstSelectedDate compare:_lastPreSelectedDate] == NSOrderedAscending) {
+                self.lastSelectedDate = _lastPreSelectedDate;
+                [self.collectionView reloadData];
+            }
+        } else if (!self.lastSelectedDate) {
             self.lastSelectedDate = _lastPreSelectedDate;
             [self.collectionView reloadData];
         }
+    } else {
+        _lastPreSelectedDate = nil;
+        self.lastSelectedDate = nil;
+        [self.collectionView reloadData];
     }
 }
 
