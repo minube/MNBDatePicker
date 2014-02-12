@@ -124,25 +124,24 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    return YES;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    
     NSDate *cellDate = [self dateForCellAtIndexPath:indexPath];
     NSDate *firstDayOfMonth = [self firstDayOfMonthForSection:indexPath.section];
     NSDateComponents *cellDateComponents = [self.calendar components:NSDayCalendarUnit | NSMonthCalendarUnit fromDate:cellDate];
     NSDateComponents *firstDayOfMonthComponents = [self.calendar components:NSMonthCalendarUnit fromDate:firstDayOfMonth];
     
     if ([cellDate compare:self.today] == NSOrderedAscending) {
-        return NO;
+        [self resetSelection];
+    } else if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
+        self.selectedDate = [self dateForCellAtIndexPath:indexPath];
+    } else {
+        [self resetSelection];
     }
-    
-    if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
-        return YES;
-    }
-    
-    return NO;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    self.selectedDate = [self dateForCellAtIndexPath:indexPath];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -334,6 +333,16 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     
     // Retrieve date with increased days count
     return [self.calendar dateByAddingComponents:dateComponents toDate:date options:0];
+}
+
+- (void)resetSelection
+{
+    self.firstSelectedDate = nil;
+    self.lastSelectedDate = nil;
+    [self.collectionView reloadData];
+    if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidCancelSelection)]) {
+        [self.delegate mnbDatePickerDidCancelSelection];
+    }
 }
 
 #pragma mark - IBActions
