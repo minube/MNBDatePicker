@@ -42,14 +42,14 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
 
 - (void)initView
 {
-    self.backgroundColor = colorWithRGBA(15, 20, 28, 0.77f);
+    self.backgroundColor = [UIColor clearColor];
 }
 
 - (void)initTitleLabel
 {
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerHeaderTextSize];
-    _titleLabel.textColor = colorWithRGBA(255, 255, 255, 0.9f);
+    _titleLabel.textColor = [UIColor whiteColor];
     _titleLabel.backgroundColor = [UIColor clearColor];
     [self addSubview:self.titleLabel];
     
@@ -63,7 +63,7 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
     // First WeekDay
     UILabel *firstWeekDayLabel = [[UILabel alloc] init];
     firstWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
-    firstWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
+    firstWeekDayLabel.textColor = [UIColor whiteColor];
     firstWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     firstWeekDayLabel.backgroundColor = [UIColor clearColor];
     firstWeekDayLabel.text = @"";
@@ -74,7 +74,7 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
     // Second WeekDay
     UILabel *secondWeekDayLabel = [[UILabel alloc] init];
     secondWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
-    secondWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
+    secondWeekDayLabel.textColor = [UIColor whiteColor];
     secondWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     secondWeekDayLabel.backgroundColor = [UIColor clearColor];
     secondWeekDayLabel.text = @"";
@@ -85,7 +85,7 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
     // Third WeekDay
     UILabel *thirdWeekDayLabel = [[UILabel alloc] init];
     thirdWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
-    thirdWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
+    thirdWeekDayLabel.textColor = [UIColor whiteColor];
     thirdWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     thirdWeekDayLabel.backgroundColor = [UIColor clearColor];
     thirdWeekDayLabel.text = @"";
@@ -96,7 +96,7 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
     // Forth WeekDay
     UILabel *forthWeekDayLabel = [[UILabel alloc] init];
     forthWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
-    forthWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
+    forthWeekDayLabel.textColor = [UIColor whiteColor];
     forthWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     forthWeekDayLabel.backgroundColor = [UIColor clearColor];
     forthWeekDayLabel.text = @"";
@@ -107,7 +107,7 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
     // Fifth WeekDay
     UILabel *fifthWeekDayLabel = [[UILabel alloc] init];
     fifthWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
-    fifthWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
+    fifthWeekDayLabel.textColor = [UIColor whiteColor];
     fifthWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     fifthWeekDayLabel.backgroundColor = [UIColor clearColor];
     fifthWeekDayLabel.text = @"";
@@ -118,7 +118,7 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
     // Sixth WeekDay
     UILabel *sixthWeekDayLabel = [[UILabel alloc] init];
     sixthWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
-    sixthWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
+    sixthWeekDayLabel.textColor =[UIColor whiteColor];
     sixthWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     sixthWeekDayLabel.backgroundColor = [UIColor clearColor];
     sixthWeekDayLabel.text = @"";
@@ -129,7 +129,7 @@ static const CGFloat MNBDatePickerWeekDaysFontSize = 11.0f;
     // Seventh WeekDay
     UILabel *seventhWeekDayLabel = [[UILabel alloc] init];
     seventhWeekDayLabel.font = [UIFont fontWithName:@"Helvetica" size:MNBDatePickerWeekDaysFontSize];
-    seventhWeekDayLabel.textColor = colorWithRGBA(255, 255, 255, 0.5f);
+    seventhWeekDayLabel.textColor = [UIColor whiteColor];
     seventhWeekDayLabel.textAlignment = NSTextAlignmentCenter;
     seventhWeekDayLabel.backgroundColor = [UIColor clearColor];
     seventhWeekDayLabel.text = @"";

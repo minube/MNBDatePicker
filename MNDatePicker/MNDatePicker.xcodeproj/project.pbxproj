@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4590F6871897C8AB00FAED4A /* UIColor+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590F6861897C8AB00FAED4A /* UIColor+Utils.m */; };
 		45CECD73188FAD6700939430 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CECD72188FAD6700939430 /* Foundation.framework */; };
 		45CECD75188FAD6800939430 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CECD74188FAD6800939430 /* CoreGraphics.framework */; };
 		45CECD77188FAD6800939430 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CECD76188FAD6800939430 /* UIKit.framework */; };
@@ -43,8 +42,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4590F6851897C8AB00FAED4A /* UIColor+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Utils.h"; sourceTree = "<group>"; };
-		4590F6861897C8AB00FAED4A /* UIColor+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Utils.m"; sourceTree = "<group>"; };
 		45CECD6F188FAD6700939430 /* MNDatePicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MNDatePicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45CECD72188FAD6700939430 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		45CECD74188FAD6800939430 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -103,15 +100,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4590F6841897C8AB00FAED4A /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				4590F6851897C8AB00FAED4A /* UIColor+Utils.h */,
-				4590F6861897C8AB00FAED4A /* UIColor+Utils.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
 		45CECD66188FAD6700939430 = {
 			isa = PBXGroup;
 			children = (
@@ -151,7 +139,6 @@
 				45CECD87188FAD6800939430 /* MNBViewController.h */,
 				45CECD88188FAD6800939430 /* MNBViewController.m */,
 				45CECD8A188FAD6800939430 /* Images.xcassets */,
-				4590F6841897C8AB00FAED4A /* Categories */,
 				45CECD79188FAD6800939430 /* Supporting Files */,
 			);
 			path = MNDatePicker;
@@ -321,7 +308,6 @@
 				45EC45E818995D9D008DE767 /* MNBTriangleView.m in Sources */,
 				45EC45E618995D9D008DE767 /* MNBDatePickerViewCell.m in Sources */,
 				45CECD89188FAD6800939430 /* MNBViewController.m in Sources */,
-				4590F6871897C8AB00FAED4A /* UIColor+Utils.m in Sources */,
 				45CECD83188FAD6800939430 /* MNBAppDelegate.m in Sources */,
 				45EC45E518995D9D008DE767 /* MNBDatePickerView.m in Sources */,
 				45CECD7F188FAD6800939430 /* main.m in Sources */,

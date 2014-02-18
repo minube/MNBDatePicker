@@ -42,7 +42,7 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 
 - (void)setUpCell
 {
-    self.backgroundColor = colorWithRGBA(39, 44, 51, 1.0f);
+    self.backgroundColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:0.1];
 }
 
 - (void)setUpDayLabel
@@ -51,7 +51,7 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
     self.dayLabel.textAlignment = NSTextAlignmentCenter;
     self.dayLabel.backgroundColor = [UIColor clearColor];
     self.dayLabel.font = [UIFont fontWithName:@"Helvetica" size:17];
-    self.dayLabel.textColor = colorWithRGBA(255, 255, 255, 0.9f);
+    self.dayLabel.textColor = [UIColor whiteColor];
     [self.contentView addSubview:self.dayLabel];
     
     self.dayLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -67,10 +67,10 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
     self.firstSelectedDayView.alpha = 0.0f;
     
     UIView *squareView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.firstSelectedDayView.bounds.size.width - 11.0f, self.firstSelectedDayView.bounds.size.height)];
-    squareView.backgroundColor = colorWithRGBA(244, 129, 0, 1.0f);
+    squareView.backgroundColor = [UIColor colorWithRed:244/255.0 green:129/255.0 blue:0/255.0 alpha:1.0];
     [self.firstSelectedDayView addSubview:squareView];
     
-    MNBTriangleView *triangle = [[MNBTriangleView alloc] initWithFrame:CGRectMake(self.firstSelectedDayView.bounds.size.width - 11.0f, 0.0f, 11.0f, self.firstSelectedDayView.bounds.size.height) color:colorWithRGBA(244, 129, 0, 1.0f)];
+    MNBTriangleView *triangle = [[MNBTriangleView alloc] initWithFrame:CGRectMake(self.firstSelectedDayView.bounds.size.width - 11.0f, 0.0f, 11.0f, self.firstSelectedDayView.bounds.size.height) color:[UIColor colorWithRed:244/255.0 green:129/255.0 blue:0/255.0 alpha:1.0]];
     [self.firstSelectedDayView addSubview:triangle];
     
     [self.contentView insertSubview:self.firstSelectedDayView belowSubview:self.dayLabel];
@@ -79,7 +79,7 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 - (void)setUpLastSelectedDayView
 {
     self.lastSelectedDayView = [[UIView alloc] initWithFrame:self.bounds];
-    self.lastSelectedDayView.backgroundColor = colorWithRGBA(244, 129, 0, 1.0f);
+    self.lastSelectedDayView.backgroundColor = [UIColor colorWithRed:244/255.0 green:129/255.0 blue:0/255.0 alpha:1.0];
     self.lastSelectedDayView.alpha = 0.0f;
     [self.contentView insertSubview:self.lastSelectedDayView belowSubview:self.dayLabel];
 }
@@ -99,9 +99,9 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 - (void)setIsSelectedDay:(BOOL)isSelectedDay
 {
     if (isSelectedDay) {
-        self.backgroundColor = colorWithRGBA(248, 168, 68, 1.0f);
+        self.backgroundColor = [UIColor colorWithRed:248/255.0 green:168/255.0 blue:68/255.0 alpha:1.0];
     } else {
-        self.backgroundColor = colorWithRGBA(39, 44, 51, 1.0f);
+        self.backgroundColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:0.1];
     }
 }
 
@@ -109,7 +109,7 @@ typedef void (^MNBDatePickerViewCellCompletionCallback)(BOOL finished);
 {
     if (_isDisableDay != isDisableDay) {
         _isDisableDay = isDisableDay;
-        self.dayLabel.textColor = _isDisableDay ? colorWithRGBA(255, 255, 255, 0.2) : colorWithRGB(255, 255, 255);
+        self.dayLabel.textColor = _isDisableDay ? [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:0.2] : [UIColor whiteColor];
     }
 }
 
