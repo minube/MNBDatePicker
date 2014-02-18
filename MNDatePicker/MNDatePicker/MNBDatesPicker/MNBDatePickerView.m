@@ -76,7 +76,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     [self addSubview:collectionViewContainer];
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.bounds.size.width + MNBDatePickerSectionSpace, self.bounds.size.height) collectionViewLayout:customLayout];
-    self.collectionView.backgroundColor = [UIColor colorWithRed:15/255.0 green:20/255.0 blue:28/255.0 alpha:0.8];
+    self.collectionView.backgroundColor = self.backgroundColor ? self.backgroundColor : [UIColor colorWithRed:15/255.0 green:20/255.0 blue:28/255.0 alpha:0.8];
     self.collectionView.pagingEnabled = YES;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -485,6 +485,14 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
         _lastPreSelectedDate = nil;
         self.lastSelectedDate = nil;
         [self.collectionView reloadData];
+    }
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    if (_backgroundColor != backgroundColor) {
+        _backgroundColor = backgroundColor;
+        self.collectionView.backgroundColor = _backgroundColor;
     }
 }
 

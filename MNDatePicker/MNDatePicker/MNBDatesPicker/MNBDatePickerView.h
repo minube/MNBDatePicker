@@ -15,6 +15,7 @@
 @end
 
 @interface MNBDatePickerView : UIView
+@property (nonatomic, strong) UIColor *backgroundColor; // Main background color
 @property (nonatomic, strong) NSDate *firstDate; // Initial date to show in the calendar
 @property (nonatomic, strong) NSDate *lastDate; // Last date to show in the calendar
 @property (nonatomic, strong) NSDate *firstPreSelectedDate; // Initial first selected date
