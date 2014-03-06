@@ -278,6 +278,13 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     return [self.calendar components:NSMonthCalendarUnit fromDate:self.firstDate toDate:date options:0].month;
 }
 
+- (NSInteger)firstBlockSectionForSelectedDate:(NSDate *)selectedDate
+{
+    NSInteger sectionForDate = [self sectionForDate:selectedDate];
+    NSInteger firstBlockSection = sectionForDate - (sectionForDate % MNBDatePickerCalendarsPerView);
+    return firstBlockSection;
+}
+
 - (NSIndexPath *)indexPathForCellAtDate:(NSDate *)date
 {
     if (!date) {
@@ -349,17 +356,23 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 - (void)nextPage:(UIButton *)button
 {
     if (self.currentSection < self.collectionView.numberOfSections - 1) {
-        self.currentSection += MNBDatePickerCalendarsPerView;
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.currentSection] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+        NSInteger section = self.currentSection + MNBDatePickerCalendarsPerView;
+        [self scrollToSection:section animated:YES];
     }
 }
 
 - (void)backPage:(UIButton *)button
 {
     if (self.currentSection > 0) {
-        self.currentSection -= MNBDatePickerCalendarsPerView;
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.currentSection] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+        NSInteger section = self.currentSection - MNBDatePickerCalendarsPerView;
+        [self scrollToSection:section animated:YES];
     }
+}
+
+- (void)scrollToSection:(NSInteger)section animated:(BOOL)animated
+{
+    self.currentSection = section;
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.currentSection] atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
 }
 
 #pragma mark - Setters
@@ -457,6 +470,8 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
             self.firstSelectedDate = _firstPreSelectedDate;
             [self.collectionView reloadData];
         }
+        NSInteger firstBlockSection = [self firstBlockSectionForSelectedDate:_firstPreSelectedDate];
+        [self scrollToSection:firstBlockSection animated:NO];
     } else {
         _firstPreSelectedDate = nil;
         _lastPreSelectedDate = nil;
