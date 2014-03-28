@@ -136,11 +136,11 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     NSDateComponents *firstDayOfMonthComponents = [self.calendar components:NSMonthCalendarUnit fromDate:firstDayOfMonth];
     
     if ([cellDate compare:self.today] == NSOrderedAscending) {
-        [self resetSelection];
+        [self doNothingSelectionBehaviour];
     } else if ((cellDateComponents.month == firstDayOfMonthComponents.month) || !self.showDaysOnlyBelongsToMonth) {
         self.selectedDate = [self dateForCellAtIndexPath:indexPath];
     } else {
-        [self resetSelection];
+        [self doNothingSelectionBehaviour];
     }
 }
 
@@ -352,6 +352,13 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     }
 }
 
+- (void)doNothingSelectionBehaviour
+{
+    if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidSelectANonValidDateWithCurrentFirstSelectedDate:lastSelectedDate:)]) {
+        [self.delegate mnbDatePickerDidSelectANonValidDateWithCurrentFirstSelectedDate:self.firstSelectedDate lastSelectedDate:self.lastSelectedDate];
+    }
+}
+
 #pragma mark - IBActions
 - (void)nextPage:(UIButton *)button
 {
@@ -401,56 +408,30 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
             self.firstSelectedDate = _selectedDate;
             MNBDatePickerViewCell *cell = [self cellForItemAtDate:self.firstSelectedDate];
             [cell setIsFirstSelectedDay:YES animated:YES];
-            if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelectionWithFirstSelectedDate:lastSelectedDate:)]) {
-                [self.delegate mnbDatePickerDidChangeSelectionWithFirstSelectedDate:self.firstSelectedDate lastSelectedDate:self.lastSelectedDate];
-            }
         } else {
-            NSComparisonResult comparison = [self.firstSelectedDate compare:_selectedDate];
-            switch (comparison) {
-                case NSOrderedSame: // selected = firstdate
-                {
-                    if (self.lastSelectedDate) {
-                        self.firstSelectedDate = nil;
-                        self.lastSelectedDate = nil;
+            if (self.lastSelectedDate) {
+                self.firstSelectedDate = _selectedDate;
+                self.lastSelectedDate = nil;
+                [self.collectionView reloadData];
+            } else {
+                NSComparisonResult comparison = [self.firstSelectedDate compare:_selectedDate];
+                switch (comparison) {
+                    case NSOrderedSame: // selected = firstdate
+                        break;
+                    case NSOrderedDescending: // selected < firstdate
+                        self.lastSelectedDate = self.firstSelectedDate;
+                        self.firstSelectedDate = _selectedDate;
                         [self.collectionView reloadData];
-                        if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidCancelSelection)]) {
-                            [self.delegate mnbDatePickerDidCancelSelection];
-                        }
-                    } else {
-                        MNBDatePickerViewCell *cell = [self cellForItemAtDate:self.firstSelectedDate];
-                        [cell setIsFirstSelectedDay:NO animated:YES];
-                        self.firstSelectedDate = nil;
-                        if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidCancelSelection)]) {
-                            [self.delegate mnbDatePickerDidCancelSelection];
-                        }
-                    }
+                        break;
+                    case NSOrderedAscending: // selected > firstdate
+                        self.lastSelectedDate = _selectedDate;
+                        [self.collectionView reloadData];
+                        break;
                 }
-                    break;
-                case NSOrderedDescending: // selected < firstdate
-                    if (self.lastSelectedDate) {
-                        self.firstSelectedDate = nil;
-                        self.lastSelectedDate = nil;
-                        [self.collectionView reloadData];
-                        if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidCancelSelection)]) {
-                            [self.delegate mnbDatePickerDidCancelSelection];
-                        }
-                    } else {
-                        MNBDatePickerViewCell *cell = [self cellForItemAtDate:self.firstSelectedDate];
-                        [cell setIsFirstSelectedDay:NO animated:YES];
-                        self.firstSelectedDate = nil;
-                        if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidCancelSelection)]) {
-                            [self.delegate mnbDatePickerDidCancelSelection];
-                        }
-                    }
-                    break;
-                case NSOrderedAscending: // selected > firstdate
-                    self.lastSelectedDate = _selectedDate;
-                    [self.collectionView reloadData];
-                    if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelectionWithFirstSelectedDate:lastSelectedDate:)]) {
-                        [self.delegate mnbDatePickerDidChangeSelectionWithFirstSelectedDate:self.firstSelectedDate lastSelectedDate:self.lastSelectedDate];
-                    }
-                    break;
             }
+        }
+        if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidChangeSelectionWithFirstSelectedDate:lastSelectedDate:)]) {
+            [self.delegate mnbDatePickerDidChangeSelectionWithFirstSelectedDate:self.firstSelectedDate lastSelectedDate:self.lastSelectedDate];
         }
     }
 }

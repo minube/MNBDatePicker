@@ -11,6 +11,7 @@
 @protocol MNBDatePickerViewDelegate <NSObject>
 @optional
 - (void)mnbDatePickerDidChangeSelectionWithFirstSelectedDate:(NSDate *)firstSelectedDate lastSelectedDate:(NSDate *)lastSelectedDate;
+- (void)mnbDatePickerDidSelectANonValidDateWithCurrentFirstSelectedDate:(NSDate *)firstSelectedDate lastSelectedDate:(NSDate *)lastSelectedDate;
 - (void)mnbDatePickerDidCancelSelection;
 @end
 
