@@ -16,7 +16,6 @@ static const NSUInteger MNBDatePickerRowsPerMonth = 6; // This value is 6 to hav
 static const CGFloat MNBDatePickerHeaderHeight = 75.0f;
 static const CGFloat MNBDatePickerItemsSpace = 2.0f;
 static const NSUInteger MNBDatePickerYearOffset = 2;
-static const CGFloat MNBDatePickerDefaultItemWidth = 42.0f;
 static const NSUInteger MNBDatePickerCalendarsPerView = 2;
 static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
