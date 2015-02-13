@@ -274,9 +274,9 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
 - (NSInteger)sectionForDate:(NSDate *)date
 {
-    return [self.calendar components:NSMonthCalendarUnit fromDate:self.firstDate toDate:date options:0].month;
+    NSInteger section = [self.calendar components:NSMonthCalendarUnit fromDate:self.firstDate toDate:date options:0].month;
+    return (section<0)?0:section;
 }
-
 - (NSInteger)firstBlockSectionForSelectedDate:(NSDate *)selectedDate
 {
     NSInteger sectionForDate = [self sectionForDate:selectedDate];
