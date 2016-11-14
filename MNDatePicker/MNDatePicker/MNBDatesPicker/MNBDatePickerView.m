@@ -131,8 +131,8 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     
     NSDate *cellDate = [self dateForCellAtIndexPath:indexPath];
     NSDate *firstDayOfMonth = [self firstDayOfMonthForSection:indexPath.section];
-    NSDateComponents *cellDateComponents = [self.calendar components:NSDayCalendarUnit | NSMonthCalendarUnit fromDate:cellDate];
-    NSDateComponents *firstDayOfMonthComponents = [self.calendar components:NSMonthCalendarUnit fromDate:firstDayOfMonth];
+    NSDateComponents *cellDateComponents = [self.calendar components:NSCalendarUnitDay | NSCalendarUnitMonth fromDate:cellDate];
+    NSDateComponents *firstDayOfMonthComponents = [self.calendar components:NSCalendarUnitMonth fromDate:firstDayOfMonth];
     
     if ([cellDate compare:self.today] == NSOrderedAscending) {
         [self doNothingSelectionBehaviour];
@@ -147,15 +147,14 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
     //Each Section is a Month
-    return [self.calendar components:NSMonthCalendarUnit fromDate:self.firstDate toDate:self.lastDate options:0].month + 1;
+    return [self.calendar components:NSCalendarUnitMonth fromDate:self.firstDate toDate:self.lastDate options:0].month + 1;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     NSInteger weeksPerMonth = MNBDatePickerRowsPerMonth;
     if (!self.sameNumberOfWeeksPerMonth) {
         NSDate *firstDayOfMonth = [self firstDayOfMonthForSection:section];
-        NSRange rangeOfWeeks = [self.calendar rangeOfUnit:NSWeekCalendarUnit inUnit:NSMonthCalendarUnit forDate:firstDayOfMonth];
+        NSRange rangeOfWeeks = [self.calendar rangeOfUnit:NSCalendarUnitWeekOfYear inUnit:NSCalendarUnitMonth forDate:firstDayOfMonth];
         weeksPerMonth = rangeOfWeeks.length;
     }
     
@@ -169,8 +168,8 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     
     NSDate *cellDate = [self dateForCellAtIndexPath:indexPath];
     NSDate *firstDayOfMonth = [self firstDayOfMonthForSection:indexPath.section];
-    NSDateComponents *cellDateComponents = [self.calendar components:NSDayCalendarUnit | NSMonthCalendarUnit fromDate:cellDate];
-    NSDateComponents *firstDayOfMonthComponents = [self.calendar components:NSMonthCalendarUnit fromDate:firstDayOfMonth];
+    NSDateComponents *cellDateComponents = [self.calendar components:NSCalendarUnitDay | NSCalendarUnitMonth fromDate:cellDate];
+    NSDateComponents *firstDayOfMonthComponents = [self.calendar components:NSCalendarUnitMonth fromDate:firstDayOfMonth];
     
     NSString *cellTitleString = @"";
     
@@ -260,8 +259,8 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
 - (BOOL)clampAndCompareDate:(NSDate *)date withReferenceDate:(NSDate *)referenceDate
 {
-    NSDate *refDate = [self clampDate:referenceDate toComponents:(NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit)];
-    NSDate *clampedDate = [self clampDate:date toComponents:(NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit)];
+    NSDate *refDate = [self clampDate:referenceDate toComponents:(NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay)];
+    NSDate *clampedDate = [self clampDate:date toComponents:(NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay)];
     
     return [refDate isEqualToDate:clampedDate];
 }
@@ -274,7 +273,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 
 - (NSInteger)sectionForDate:(NSDate *)date
 {
-    NSInteger section = [self.calendar components:NSMonthCalendarUnit fromDate:self.firstDate toDate:date options:0].month;
+    NSInteger section = [self.calendar components:NSCalendarUnitMonth fromDate:self.firstDate toDate:date options:0].month;
     return (section<0)?0:section;
 }
 - (NSInteger)firstBlockSectionForSelectedDate:(NSDate *)selectedDate
@@ -293,11 +292,11 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     NSInteger section = [self sectionForDate:date];
     
     NSDate *firstOfMonth = [self firstDayOfMonthForSection:section];
-    NSInteger ordinalityOfFirstDay = [self.calendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSWeekCalendarUnit forDate:firstOfMonth];
+    NSInteger ordinalityOfFirstDay = [self.calendar ordinalityOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitWeekOfMonth forDate:firstOfMonth];
     
     
-    NSDateComponents *dateComponents = [self.calendar components:NSDayCalendarUnit fromDate:date];
-    NSDateComponents *firstOfMonthComponents = [self.calendar components:NSDayCalendarUnit fromDate:firstOfMonth];
+    NSDateComponents *dateComponents = [self.calendar components:NSCalendarUnitDay fromDate:date];
+    NSDateComponents *firstOfMonthComponents = [self.calendar components:NSCalendarUnitDay fromDate:firstOfMonth];
     NSInteger item = (dateComponents.day - firstOfMonthComponents.day) - (1 - ordinalityOfFirstDay);
     
     return [NSIndexPath indexPathForItem:item inSection:section];
@@ -306,20 +305,18 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 - (NSDate *)dateForCellAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDate *firstOfMonth = [self firstDayOfMonthForSection:indexPath.section];
-    NSInteger ordinalityOfFirstDay = [self.calendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSWeekCalendarUnit forDate:firstOfMonth];
+    NSInteger ordinalityOfFirstDay = [self.calendar ordinalityOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitWeekOfMonth forDate:firstOfMonth];
     NSDateComponents *dateComponents = [NSDateComponents new];
     dateComponents.day = (1 - ordinalityOfFirstDay) + indexPath.item;
     
     return [self.calendar dateByAddingComponents:dateComponents toDate:firstOfMonth options:0];
 }
 
-- (MNBDatePickerViewCell *)cellForItemAtDate:(NSDate *)date
-{
+- (MNBDatePickerViewCell *)cellForItemAtDate:(NSDate *)date {
     return (MNBDatePickerViewCell *)[self.collectionView cellForItemAtIndexPath:[self indexPathForCellAtDate:date]];
 }
 
-- (NSIndexPath *)firstVisibleIndexPath
-{
+- (NSIndexPath *)firstVisibleIndexPath {
     NSArray *visibleIndexPaths = self.collectionView.indexPathsForVisibleItems;
     NSIndexPath *firstVisibleIndexPath = visibleIndexPaths.lastObject;
     for (NSIndexPath *indexPath in visibleIndexPaths) {
@@ -331,8 +328,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     return firstVisibleIndexPath;
 }
 
-- (NSDate *)addDays:(NSInteger)numberOfDays toDate:(NSDate *)date
-{
+- (NSDate *)addDays:(NSInteger)numberOfDays toDate:(NSDate *)date {
     // Create and initialize date component instance
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     [dateComponents setDay:numberOfDays];
@@ -341,8 +337,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     return [self.calendar dateByAddingComponents:dateComponents toDate:date options:0];
 }
 
-- (void)resetSelection
-{
+- (void)resetSelection {
     self.firstSelectedDate = nil;
     self.lastSelectedDate = nil;
     [self.collectionView reloadData];
@@ -351,46 +346,40 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     }
 }
 
-- (void)doNothingSelectionBehaviour
-{
+- (void)doNothingSelectionBehaviour {
     if ([self.delegate respondsToSelector:@selector(mnbDatePickerDidSelectANonValidDateWithCurrentFirstSelectedDate:lastSelectedDate:)]) {
         [self.delegate mnbDatePickerDidSelectANonValidDateWithCurrentFirstSelectedDate:self.firstSelectedDate lastSelectedDate:self.lastSelectedDate];
     }
 }
 
 #pragma mark - IBActions
-- (void)nextPage:(UIButton *)button
-{
+- (void)nextPage:(UIButton *)button {
     if (self.currentSection < self.collectionView.numberOfSections - 1) {
         NSInteger section = self.currentSection + MNBDatePickerCalendarsPerView;
         [self scrollToSection:section animated:YES];
     }
 }
 
-- (void)backPage:(UIButton *)button
-{
+- (void)backPage:(UIButton *)button {
     if (self.currentSection > 0) {
         NSInteger section = self.currentSection - MNBDatePickerCalendarsPerView;
         [self scrollToSection:section animated:YES];
     }
 }
 
-- (void)scrollToSection:(NSInteger)section animated:(BOOL)animated
-{
+- (void)scrollToSection:(NSInteger)section animated:(BOOL)animated {
     self.currentSection = section;
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.currentSection] atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
 }
 
 #pragma mark - Setters
-- (void)setFirstDate:(NSDate *)firstDate
-{
-    NSDateComponents *components = [self.calendar components:NSMonthCalendarUnit | NSYearCalendarUnit fromDate:firstDate];
+- (void)setFirstDate:(NSDate *)firstDate {
+    NSDateComponents *components = [self.calendar components:NSCalendarUnitMonth | NSCalendarUnitYear fromDate:firstDate];
     _firstDate = [self.calendar dateFromComponents:components];
 }
 
-- (void)setLastDate:(NSDate *)lastDate
-{
-    NSDateComponents *components = [self.calendar components:NSMonthCalendarUnit | NSYearCalendarUnit fromDate:lastDate];
+- (void)setLastDate:(NSDate *)lastDate {
+    NSDateComponents *components = [self.calendar components:NSCalendarUnitMonth | NSCalendarUnitYear fromDate:lastDate];
     NSDate *firstDayOfMonth = [self.calendar dateFromComponents:components];
     
     NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
@@ -399,8 +388,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
     _lastDate = [self.calendar dateByAddingComponents:offsetComponents toDate:firstDayOfMonth options:0];
 }
 
-- (void)setSelectedDate:(NSDate *)selectedDate
-{
+- (void)setSelectedDate:(NSDate *)selectedDate {
     if (_selectedDate != selectedDate) {
         _selectedDate = selectedDate;
         if (!self.firstSelectedDate) {
@@ -438,7 +426,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 - (void)setFirstPreSelectedDate:(NSDate *)firstPreSelectedDate
 {
     if (firstPreSelectedDate) {
-        firstPreSelectedDate = [self clampDate:firstPreSelectedDate toComponents:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit)];
+        firstPreSelectedDate = [self clampDate:firstPreSelectedDate toComponents:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay)];
         _firstPreSelectedDate = firstPreSelectedDate;
         if (self.firstSelectedDate && [_firstPreSelectedDate compare:self.firstSelectedDate] != NSOrderedSame) {
             self.firstSelectedDate = _firstPreSelectedDate;
@@ -464,7 +452,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 - (void)setLastPreSelectedDate:(NSDate *)lastPreSelectedDate
 {
     if (lastPreSelectedDate) {
-        lastPreSelectedDate = [self clampDate:lastPreSelectedDate toComponents:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit)];
+        lastPreSelectedDate = [self clampDate:lastPreSelectedDate toComponents:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay)];
         _lastPreSelectedDate = lastPreSelectedDate;
         if (self.lastSelectedDate &&  [_lastPreSelectedDate compare:self.lastSelectedDate] != NSOrderedSame) {
             // Protection against invalid last choosen dates
@@ -543,7 +531,7 @@ static const CGFloat MNBDatePickerSectionSpace = 14.0f;
 - (NSDate *)today
 {
     if (!_today) {
-        _today = [self.calendar dateFromComponents:[self.calendar components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:[NSDate date]]];
+        _today = [self.calendar dateFromComponents:[self.calendar components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]]];
     }
     return _today;
 }
